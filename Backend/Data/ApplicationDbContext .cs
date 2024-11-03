@@ -41,6 +41,22 @@ namespace Backend.Data
                 .IsUnique();
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Locations>().HasData(
+                new Locations { Id = -1, Name = "Шабла" },
+                new Locations { Id = -2, Name = "Калиакра" },
+                new Locations { Id = -3, Name = "Варна" },
+                new Locations { Id = -4, Name = "Емине" },
+                new Locations { Id = -5, Name = "Бургас" },
+                new Locations { Id = -6, Name = "Ахтопол" }
+            );
+
+            modelBuilder.Entity<Units>().HasData(
+                new Units { UnitId = -1, UnitName = "Бала" },
+                new Units { UnitId = -2, UnitName = "Метра" },
+                new Units { UnitId = -3, UnitName = "°C" },
+                new Units { UnitId = -4, UnitName = "м/с" }
+            );
         }
     }
 }

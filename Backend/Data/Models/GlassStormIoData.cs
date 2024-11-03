@@ -28,8 +28,8 @@ namespace Backend.Data.Models
         public DateTime Date { get; set; }
 
         [Required]
-        public int LocationId { get; set; }
         [ForeignKey("Locations")]
+        public int LocationId { get; set; }
         [Required]
         public virtual Locations Location { get; set; }
     }

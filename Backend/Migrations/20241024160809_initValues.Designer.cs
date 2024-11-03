@@ -4,6 +4,7 @@ using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241024160809_initValues")]
+    partial class initValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -282,6 +285,9 @@ namespace Backend.Migrations
                     b.Property<int>("LocationId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Locations")
+                        .HasColumnType("int");
+
                     b.Property<float?>("TempRead")
                         .HasColumnType("real");
 
@@ -302,7 +308,7 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("Locations");
 
                     b.HasIndex("TempUnitId");
 
@@ -1079,7 +1085,7 @@ namespace Backend.Migrations
                 {
                     b.HasOne("Backend.Data.Models.Locations", "Location")
                         .WithMany()
-                        .HasForeignKey("LocationId")
+                        .HasForeignKey("Locations")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

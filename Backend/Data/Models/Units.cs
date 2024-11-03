@@ -12,7 +12,7 @@ namespace Backend.Data.Models
 
         [Required]
         [StringLength(20)]
-        [Unicode]
+        [Column(TypeName = "nvarchar(20)")]
         public string UnitName { get; set; }
     }
 }

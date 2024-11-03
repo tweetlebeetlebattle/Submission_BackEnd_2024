@@ -11,6 +11,7 @@ namespace Backend.Data.Models
 
         [Required]
         [StringLength(100)]
+        [Column(TypeName = "nvarchar(100)")]
         public string Name { get; set; }
     }
 }
