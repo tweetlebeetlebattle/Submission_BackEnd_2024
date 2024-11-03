@@ -1,6 +1,14 @@
-﻿namespace Backend.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Backend.Controllers
 {
-    public class TestController
+    [Route("api/[controller]")]
+    public class TestController : ControllerBase
     {
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok(new { message = "ok" });
+        }
     }
 }
