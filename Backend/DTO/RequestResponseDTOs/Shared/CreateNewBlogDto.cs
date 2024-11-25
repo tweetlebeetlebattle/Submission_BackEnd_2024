@@ -1,10 +1,9 @@
-﻿namespace Backend.DTO
+﻿namespace Backend.DTO.RequestResponseDTOs.Shared
 {
     public class CreateNewBlogDto
     {
         public string Text { get; set; }
         public IFormFile Image { get; set; }
-        public string UserId { get; set; }
-        public string DateTimestamp { get; set; }
+        public string DateTimestamp { get; set; } // Leave other necessary fields
     }
 }

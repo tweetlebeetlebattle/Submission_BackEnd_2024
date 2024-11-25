@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using Backend.Services;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
@@ -12,14 +10,12 @@ namespace Backend.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IConfiguration _configuration;
+        private readonly JWTService _jwtService;
 
-        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+        public AuthController(UserManager<IdentityUser> userManager, JWTService jwtService)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
-            _configuration = configuration;
+            _jwtService = jwtService;
         }
 
         [HttpPost("login")]
@@ -28,7 +24,7 @@ namespace Backend.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                var token = GenerateJwtToken(user);
+                var token = _jwtService.GenerateJwtTokenByEmail(user.Email);
                 var isAdmin = await _userManager.IsInRoleAsync(user, "Admin"); // Assuming "Admin" is the role name
                 return Ok(new AuthenticationSuccessResponse { Username = user.UserName, Token = token, IsAdmin = isAdmin });
             }
@@ -43,7 +39,7 @@ namespace Backend.Controllers
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                var token = GenerateJwtToken(user);
+                var token = _jwtService.GenerateJwtTokenByEmail(user.Email);
                 return Ok(new AuthenticationSuccessResponse { Username = user.UserName, Token = token, IsAdmin = false });
             }
             else
@@ -52,30 +48,8 @@ namespace Backend.Controllers
                 return BadRequest(new { error = errors });
             }
         }
-
-        private string GenerateJwtToken(IdentityUser user)
-        {
-            var claims = new[]
-            {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
-        };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(int.Parse(_configuration["Jwt:DurationInMinutes"])),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
     }
+
     public class AuthenticationSuccessResponse
     {
         public string Username { get; set; }

@@ -9,17 +9,17 @@ namespace Backend.Controllers
     [Route("api/[controller]")]
     public class AdminController : ControllerBase
     {
-        private readonly AdminService _adminService;
+        private readonly AdminService adminService;
 
-        public AdminController(AdminService adminService)
+        public AdminController(AdminService _adminService)
         {
-            _adminService = adminService;
+            adminService = _adminService;
         }
 
         [HttpGet("FetchAllUnapprovedBlogComments")]
         public async Task<IActionResult> FetchAllUnapprovedBlogComments()
         {
-            var result = await _adminService.FetchAllUnapprovedBlogCommentsAsync();
+            var result = await adminService.FetchAllUnapprovedBlogCommentsAsync();
             return Ok(result);
         }
 
@@ -32,7 +32,7 @@ namespace Backend.Controllers
             if (dto.Status != "approved" && dto.Status != "rejected")
                 return BadRequest("Status must be either 'approved' or 'rejected'.");
 
-            var result = await _adminService.ApproveOrRejectBlogCommentAsync(dto.Id, dto.Status);
+            var result = await adminService.ApproveOrRejectBlogCommentAsync(dto.Id, dto.Status);
             return Ok(result);
         }
     }

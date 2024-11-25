@@ -8,6 +8,7 @@ using Backend.Data;
 using Backend.Repositories;
 using Amazon.Runtime;
 using Amazon;
+using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,6 +85,12 @@ builder.Services.AddCors(options =>
 // Register repositories in DI
 builder.Services.AddScoped<AdminRepository>();
 builder.Services.AddScoped<DiverRepository>();
+
+// Register services
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<DiverService>();
+builder.Services.AddScoped<UtilityService>();
+builder.Services.AddScoped<JWTService>();
 
 // Add Controllers and Swagger
 builder.Services.AddAuthorization();
