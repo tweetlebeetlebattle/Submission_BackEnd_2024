@@ -1,4 +1,4 @@
-﻿namespace Backend.DTO
+﻿namespace Backend.DTO.RequestResponseDTOs.Diver
 {
     public class BroadSeaDataHTML
     {

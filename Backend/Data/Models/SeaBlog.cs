@@ -31,5 +31,8 @@ namespace Backend.Data.Models
 
         [Required]
         public bool ApprovedStatus { get; set; } = false; // default unaccepted
+        [Required]
+        public virtual List<SeaComment> SeaComments { get; set; }
+
     }
 }

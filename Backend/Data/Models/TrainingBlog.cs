@@ -30,5 +30,7 @@ namespace Backend.Data.Models
 
         [Required]
         public bool ApprovedStatus { get; set; } = false;
+        [Required]
+        public virtual List<TrainingComment> TrainingComments { get; set; }
     }
 }

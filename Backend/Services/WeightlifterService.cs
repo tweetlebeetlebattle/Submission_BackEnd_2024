@@ -1,21 +1,16 @@
-﻿using Backend.DTO;
-using Backend.DTO.RequestResponseDTOs.Shared;
+﻿using Backend.DTO.RequestResponseDTOs.Shared;
 using Backend.Repositories;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Backend.Services
 {
-    public class DiverService
+    public class WeightlifterService
     {
-        private readonly DiverRepository _diverRepository;
+        private readonly WeightlifterRepository _weightlifterRepository;
         private readonly S3BucketAWSService _s3BucketAWSService;
 
-        public DiverService(DiverRepository diverRepository, S3BucketAWSService s3BucketAWSService)
+        public WeightlifterService(WeightlifterRepository weightlifterRepository, S3BucketAWSService s3BucketAWSService)
         {
-            _diverRepository = diverRepository;
+            _weightlifterRepository = weightlifterRepository;
             _s3BucketAWSService = s3BucketAWSService;
         }
 
@@ -34,7 +29,7 @@ namespace Backend.Services
                 pictureUrl = await _s3BucketAWSService.UploadFileAsync("bucketheadboris", $"blogs/{Guid.NewGuid()}_{image.FileName}", stream);
             }
 
-            await _diverRepository.CreateNewBlog(userId, textUrl, pictureUrl);
+            await _weightlifterRepository.CreateNewBlog(userId, textUrl, pictureUrl);
             return "Blog created successfully!";
         }
 
@@ -53,13 +48,13 @@ namespace Backend.Services
                 pictureUrl = await _s3BucketAWSService.UploadFileAsync("bucketheadboris", $"comments/{Guid.NewGuid()}_{image.FileName}", stream);
             }
 
-            await _diverRepository.CreateNewCommentAsync(blogId, userId, textUrl, pictureUrl);
+            await _weightlifterRepository.CreateNewCommentAsync(blogId, userId, textUrl, pictureUrl);
             return "Comment created successfully!";
         }
 
         public async Task<List<BlogWithComments>> FetchAllApprovedCommentsAsync()
         {
-            return await _diverRepository.FetchAllApprovedBlogDataAsync();
+            return await _weightlifterRepository.FetchAllApprovedBlogDataAsync();
         }
     }
 }

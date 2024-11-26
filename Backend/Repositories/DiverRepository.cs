@@ -1,6 +1,7 @@
 ﻿using Backend.Data;
 using Backend.Data.Models;
-using Backend.DTO;
+using Backend.DTO.RequestResponseDTOs.Diver;
+using Backend.DTO.RequestResponseDTOs.Shared;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -15,28 +16,33 @@ namespace Backend.Repositories
             context = _context;
         }
 
-        public async Task<List<SeaBlogWithComments>> FetchAllApprovedBlogDataAsync()
+        public async Task<List<BlogWithComments>> FetchAllApprovedBlogDataAsync()
         {
             var blogsWithComments = await context.SeaBlog
-                .Where(blog => blog.ApprovedStatus) 
-                .Include(blog => blog.Media) 
-                .Select(blog => new SeaBlogWithComments
+                .Where(blog => blog.ApprovedStatus)
+                .Include(blog => blog.ApplicationUser)
+                .Include(blog => blog.Media)
+                .Include(blog => blog.SeaComments)
+                    .ThenInclude(comment => comment.ApplicationUser)
+                .Include(blog => blog.SeaComments)
+                    .ThenInclude(comment => comment.Media)
+                .Select(blog => new BlogWithComments
                 {
+                    BlogId = blog.BlogId,
                     ApplicationUserName = blog.ApplicationUser.UserName,
                     MediaTextUrl = blog.Media.TextUrl,
                     MediaPictureUrl = blog.Media.PictureUrl,
                     Time = blog.Time,
-                    Comments = context.SeaComment
-                        .Where(comment => comment.ParentBlogId == blog.BlogId)
-                        .Where(comment => comment.ApprovedStatus) 
-                        .Select(comment => new SeaCommentDto
+                    Comments = blog.SeaComments
+                        .Where(comment => comment.ApprovedStatus)
+                        .Select(comment => new CommentDto
                         {
                             ApplicationUserName = comment.ApplicationUser.UserName,
                             MediaTextUrl = comment.Media.TextUrl,
                             MediaPictureUrl = comment.Media.PictureUrl,
                             Time = comment.Time,
                         }).ToList()
-                })
+                }) 
                 .ToListAsync();
 
             return blogsWithComments;

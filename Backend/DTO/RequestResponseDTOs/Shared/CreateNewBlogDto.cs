@@ -4,6 +4,6 @@
     {
         public string Text { get; set; }
         public IFormFile Image { get; set; }
-        public string DateTimestamp { get; set; } // Leave other necessary fields
+        public string DateTimestamp { get; set; } 
     }
 }

@@ -34,6 +34,6 @@ namespace Backend.Data.Models
         [Required]
         public virtual Media Media { get; set; }
 
-        public bool? ApprovedStatus { get; set; } = false;
+        public bool ApprovedStatus { get; set; } = false;
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Amazon.S3; // AWS S3 namespace
+using Amazon.S3; 
 using Backend.Data;
 using Backend.Repositories;
 using Amazon.Runtime;
@@ -12,10 +12,8 @@ using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add User Secrets for sensitive configuration during development
 builder.Configuration.AddUserSecrets<Program>();
 
-// AWS Configuration
 var awsOptions = new AmazonS3Config
 {
     RegionEndpoint = RegionEndpoint.GetBySystemName(builder.Configuration["AWS:Region"])
@@ -33,11 +31,9 @@ builder.Services.AddSingleton<IAmazonS3>(provider =>
 builder.Services.AddScoped<S3UtilityService>();
 builder.Services.AddScoped<S3BucketAWSService>();
 
-// Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add Identity Services
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
@@ -49,7 +45,6 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// Configure JWT Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -71,7 +66,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("MyAllowSpecificOrigins", policy =>
@@ -82,17 +76,18 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Register repositories in DI
 builder.Services.AddScoped<AdminRepository>();
 builder.Services.AddScoped<DiverRepository>();
+builder.Services.AddScoped<WeightlifterRepository>();
 
-// Register services
+
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<DiverService>();
+builder.Services.AddScoped<WeightlifterService>();
+
 builder.Services.AddScoped<UtilityService>();
 builder.Services.AddScoped<JWTService>();
 
-// Add Controllers and Swagger
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -100,7 +95,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -111,5 +105,5 @@ app.UseHttpsRedirection();
 app.UseCors("MyAllowSpecificOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers(); // Map API controllers
+app.MapControllers(); 
 app.Run();

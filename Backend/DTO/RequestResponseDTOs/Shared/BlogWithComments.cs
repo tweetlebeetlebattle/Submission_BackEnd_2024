@@ -1,15 +1,16 @@
-﻿namespace Backend.DTO
+﻿namespace Backend.DTO.RequestResponseDTOs.Shared
 {
-    public class SeaBlogWithComments
+    public class BlogWithComments
     {
+        public string BlogId { get; set; }
         public string ApplicationUserName { get; set; }
         public string MediaTextUrl { get; set; }
         public string MediaPictureUrl { get; set; }
         public DateTime Time { get; set; }
-        public List<SeaCommentDto> Comments { get; set; }
+        public List<CommentDto> Comments { get; set; }
     }
 
-    public class SeaCommentDto
+    public class CommentDto
     {
         public string ApplicationUserName { get; set; }
         public string MediaTextUrl { get; set; }

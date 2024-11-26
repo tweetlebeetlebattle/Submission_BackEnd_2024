@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Backend.Services;
-using System.Threading.Tasks;
+using Backend.Data.ExtendedModel;
+using Backend.DTO.RequestResponseDTOs.Auth;
 
 namespace Backend.Controllers
 {
@@ -25,7 +26,7 @@ namespace Backend.Controllers
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var token = _jwtService.GenerateJwtTokenByEmail(user.Email);
-                var isAdmin = await _userManager.IsInRoleAsync(user, "Admin"); // Assuming "Admin" is the role name
+                var isAdmin = await _userManager.IsInRoleAsync(user, "Admin"); 
                 return Ok(new AuthenticationSuccessResponse { Username = user.UserName, Token = token, IsAdmin = isAdmin });
             }
             return Unauthorized();
@@ -34,7 +35,7 @@ namespace Backend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var user = new IdentityUser { UserName = model.Username, Email = model.Email };
+            var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
@@ -48,25 +49,5 @@ namespace Backend.Controllers
                 return BadRequest(new { error = errors });
             }
         }
-    }
-
-    public class AuthenticationSuccessResponse
-    {
-        public string Username { get; set; }
-        public string Token { get; set; }
-        public bool IsAdmin { get; set; }
-    }
-
-    public class LoginModel
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
-
-    public class RegisterModel
-    {
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
     }
 }

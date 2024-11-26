@@ -54,7 +54,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("WaveUnitId");
 
-                    b.ToTable("DailyGifReading");
+                    b.ToTable("DailyGifReading", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.DailyGlassStormReading", b =>
@@ -117,7 +117,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("WindUnitId");
 
-                    b.ToTable("DailyGlassStormReading");
+                    b.ToTable("DailyGlassStormReading", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.DailyHTMLReading", b =>
@@ -166,7 +166,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("WaveUnitId");
 
-                    b.ToTable("DailyHTMLReading");
+                    b.ToTable("DailyHTMLReading", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.DataFetchingLog", b =>
@@ -187,7 +187,7 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataFetchingLogs");
+                    b.ToTable("DataFetchingLogs", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.Feedback", b =>
@@ -236,7 +236,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("WindSpeedUnitId");
 
-                    b.ToTable("Feedback");
+                    b.ToTable("Feedback", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.GifData", b =>
@@ -265,7 +265,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("WaveUnitId");
 
-                    b.ToTable("GifData");
+                    b.ToTable("GifData", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.GlassStormIoData", b =>
@@ -310,7 +310,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("WindSpeedUnitId");
 
-                    b.ToTable("GlassStormIoData");
+                    b.ToTable("GlassStormIoData", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.HTMLData", b =>
@@ -347,7 +347,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("WaveUnitId");
 
-                    b.ToTable("HTMLData");
+                    b.ToTable("HTMLData", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.Locations", b =>
@@ -368,7 +368,7 @@ namespace Backend.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
 
                     b.HasData(
                         new
@@ -426,7 +426,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Media");
+                    b.ToTable("Media", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.SeaBlog", b =>
@@ -455,7 +455,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("MediaId");
 
-                    b.ToTable("SeaBlog");
+                    b.ToTable("SeaBlog", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.SeaComment", b =>
@@ -490,7 +490,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("ParentBlogId");
 
-                    b.ToTable("SeaComment");
+                    b.ToTable("SeaComment", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.TrainingBlog", b =>
@@ -519,7 +519,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("MediaId");
 
-                    b.ToTable("TrainingBlog");
+                    b.ToTable("TrainingBlog", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.TrainingComment", b =>
@@ -554,7 +554,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("ParentBlogId");
 
-                    b.ToTable("TrainingComment");
+                    b.ToTable("TrainingComment", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.TrainingLog", b =>
@@ -598,7 +598,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("TrainingLog");
+                    b.ToTable("TrainingLog", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.TrainingSetsLog", b =>
@@ -629,7 +629,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("TrainingLogId");
 
-                    b.ToTable("TrainingSetsLog");
+                    b.ToTable("TrainingSetsLog", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.TrainingUnits", b =>
@@ -648,7 +648,7 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TrainingUnits");
+                    b.ToTable("TrainingUnits", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Data.Models.Units", b =>
@@ -666,7 +666,7 @@ namespace Backend.Migrations
 
                     b.HasKey("UnitId");
 
-                    b.ToTable("Units");
+                    b.ToTable("Units", (string)null);
 
                     b.HasData(
                         new
@@ -719,7 +719,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("UniversalReading");
+                    b.ToTable("UniversalReading", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
