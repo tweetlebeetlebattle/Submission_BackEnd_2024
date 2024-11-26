@@ -8,12 +8,12 @@ namespace Backend.Data.Models
     public class SeaComment
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CommentId { get; set; }  
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public string CommentId { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         [ForeignKey("SeaBlog")]
-        public int ParentBlogId { get; set; }
+        public string ParentBlogId { get; set; }
         [Required]
         public virtual SeaBlog ParentBlog { get; set; }  
 

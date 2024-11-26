@@ -6,7 +6,7 @@
     }
     public class UnapprovedBlogComment
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string TextUrl { get; set; }
         public string PictureUrl { get; set; }
 

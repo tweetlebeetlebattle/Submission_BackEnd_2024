@@ -15,12 +15,11 @@ namespace Backend.Repositories
             context = _context;
         }
 
-        // FetchAllApprovedBlogData
         public async Task<List<SeaBlogWithComments>> FetchAllApprovedBlogDataAsync()
         {
             var blogsWithComments = await context.SeaBlog
-                .Where(blog => blog.ApprovedStatus) // Only approved blogs
-                .Include(blog => blog.Media) // Include Media details
+                .Where(blog => blog.ApprovedStatus) 
+                .Include(blog => blog.Media) 
                 .Select(blog => new SeaBlogWithComments
                 {
                     ApplicationUserName = blog.ApplicationUser.UserName,
@@ -29,7 +28,7 @@ namespace Backend.Repositories
                     Time = blog.Time,
                     Comments = context.SeaComment
                         .Where(comment => comment.ParentBlogId == blog.BlogId)
-                        .Where(comment => comment.ApprovedStatus) // Only approved comments
+                        .Where(comment => comment.ApprovedStatus) 
                         .Select(comment => new SeaCommentDto
                         {
                             ApplicationUserName = comment.ApplicationUser.UserName,
@@ -43,7 +42,6 @@ namespace Backend.Repositories
             return blogsWithComments;
         }
 
-        // InsertNewBlog
         public async Task CreateNewBlog(string userId, string textUrl, string pictureUrl)
         {
             var newMedia = new Media
@@ -51,7 +49,7 @@ namespace Backend.Repositories
                 MediaId = Guid.NewGuid().ToString(),
                 TextUrl = textUrl,
                 PictureUrl = pictureUrl,
-                ApplicationUserId = userId // Associate with the user
+                ApplicationUserId = userId 
             };
 
             await context.Media.AddAsync(newMedia);
@@ -69,33 +67,28 @@ namespace Backend.Repositories
             await context.SaveChangesAsync();
         }
 
-        // InsertNewComment
-        public async Task CreateNewCommentAsync(int parentBlogId, string userId, string textUrl, string pictureUrl)
+        public async Task CreateNewCommentAsync(string parentBlogId, string userId, string textUrl, string pictureUrl)
         {
-            // Create a new Media entry
             var newMedia = new Media
             {
-                MediaId = Guid.NewGuid().ToString(), // Generate unique UUID
+                MediaId = Guid.NewGuid().ToString(), 
                 TextUrl = textUrl,
                 PictureUrl = pictureUrl,
-                ApplicationUserId = userId // Associate with the user
+                ApplicationUserId = userId 
             };
 
-            // Add the media to the context
             await context.Media.AddAsync(newMedia);
-            await context.SaveChangesAsync(); // Save to get MediaId
+            await context.SaveChangesAsync(); 
 
-            // Create a new SeaComment entry
             var newComment = new SeaComment
             {
                 ParentBlogId = parentBlogId,
                 ApplicationUserId = userId,
-                MediaId = newMedia.MediaId, // Link the MediaId
+                MediaId = newMedia.MediaId, 
                 Time = DateTime.UtcNow,
-                ApprovedStatus = false // Default to not approved
+                ApprovedStatus = false 
             };
 
-            // Add the comment to the context
             await context.SeaComment.AddAsync(newComment);
             await context.SaveChangesAsync();
         }
@@ -107,7 +100,7 @@ namespace Backend.Repositories
 
             var readings = await context.DailyHTMLReading
                 .Where(reading => reading.Date >= startDate && reading.Date <= endDate)
-                .Include(reading => reading.Location) // Include Location details
+                .Include(reading => reading.Location) 
                 .ToListAsync();
 
             var groupedReadings = readings
@@ -139,18 +132,18 @@ namespace Backend.Repositories
 
             var readings = await context.DailyGifReading
                 .Where(reading => reading.Date >= startDate && reading.Date <= endDate)
-                .Include(reading => reading.Location) // Include Location details
+                .Include(reading => reading.Location) 
                 .ToListAsync();
 
             var groupedReadings = readings
                 .GroupBy(reading => reading.Location)
                 .Select(group => new SpecificSeaDataGif
                 {
-                    Location = group.Key.Name, // Assuming Location has a Name property
+                    Location = group.Key.Name, 
                     DailyWaveMax = group.Max(r => r.DailyWaveMax),
                     DailyWaveMin = group.Min(r => r.DailyWaveMin),
                     DailyWaveAvg = group.Average(r => r.DailyWaveAvg),
-                    DateTime = group.Max(r => r.Date) // Latest date in the group
+                    DateTime = group.Max(r => r.Date)
                 })
                 .ToList();
 
@@ -168,14 +161,14 @@ namespace Backend.Repositories
 
             var readings = await context.DailyGlassStormReading
                 .Where(reading => reading.Date >= startDate && reading.Date <= endDate)
-                .Include(reading => reading.Location) // Include Location details
+                .Include(reading => reading.Location) 
                 .ToListAsync();
 
             var groupedReadings = readings
                 .GroupBy(reading => reading.Location)
                 .Select(group => new SpecificSeaDataGSio
                 {
-                    Location = group.Key.Name, // Assuming Location has a Name property
+                    Location = group.Key.Name, 
                     DailyWaveMax = group.Max(r => r.DailyWaveMax),
                     DailyWaveMin = group.Min(r => r.DailyWaveMin),
                     DailyWaveAvg = group.Average(r => r.DailyWaveAvg),
@@ -185,7 +178,7 @@ namespace Backend.Repositories
                     DailyWindMax = group.Max(r => r.DailyWindMax),
                     DailyWindMin = group.Min(r => r.DailyWindMin),
                     DailyWindAvg = group.Average(r => r.DailyWindAvg),
-                    DateTime = group.Max(r => r.Date) // Latest date in the group
+                    DateTime = group.Max(r => r.Date) 
                 })
                 .ToList();
 
@@ -197,7 +190,6 @@ namespace Backend.Repositories
             return broadSeaData;
         }
 
-        // FetchSeaDataHistorcForSpecifiedLocation
         public async Task<HistoricSeaDataByLocation> FetchSeaDataHistorcForSpecifiedLocation(string locationName)
         {
             var location = await context.Locations

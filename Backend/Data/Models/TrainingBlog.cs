@@ -8,8 +8,8 @@ namespace Backend.Data.Models
     public class TrainingBlog
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int BlogId { get; set; }  
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public string BlogId { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         [StringLength(450)]

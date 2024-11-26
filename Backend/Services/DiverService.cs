@@ -52,7 +52,7 @@ namespace Backend.Services
                 pictureUrl = await _s3BucketAWSService.UploadFileAsync("bucketheadboris", $"comments/{Guid.NewGuid()}_{image.FileName}", stream);
             }
 
-            await _diverRepository.CreateNewCommentAsync(int.Parse(blogId), userId, textUrl, pictureUrl);
+            await _diverRepository.CreateNewCommentAsync(blogId, userId, textUrl, pictureUrl);
             return "Comment created successfully!";
         }
 

@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -442,15 +444,14 @@ namespace Backend.Migrations
                     WindSpeedIndex = table.Column<float>(type: "real", nullable: true),
                     WindSpeedUnitId = table.Column<int>(type: "int", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LocationId = table.Column<int>(type: "int", nullable: false),
-                    Locations = table.Column<int>(type: "int", nullable: false)
+                    LocationId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GlassStormIoData", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GlassStormIoData_Locations_Locations",
-                        column: x => x.Locations,
+                        name: "FK_GlassStormIoData_Locations_LocationId",
+                        column: x => x.LocationId,
                         principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
@@ -561,8 +562,7 @@ namespace Backend.Migrations
                 name: "SeaBlog",
                 columns: table => new
                 {
-                    BlogId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BlogId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MediaId = table.Column<string>(type: "nvarchar(250)", nullable: false),
@@ -589,8 +589,7 @@ namespace Backend.Migrations
                 name: "TrainingBlog",
                 columns: table => new
                 {
-                    BlogId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BlogId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MediaId = table.Column<string>(type: "nvarchar(250)", nullable: false),
@@ -644,9 +643,8 @@ namespace Backend.Migrations
                 name: "SeaComment",
                 columns: table => new
                 {
-                    CommentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ParentBlogId = table.Column<int>(type: "int", nullable: false),
+                    CommentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ParentBlogId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MediaId = table.Column<string>(type: "nvarchar(250)", nullable: false),
@@ -679,9 +677,8 @@ namespace Backend.Migrations
                 name: "TrainingComment",
                 columns: table => new
                 {
-                    CommentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ParentBlogId = table.Column<int>(type: "int", nullable: false),
+                    CommentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ParentBlogId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MediaId = table.Column<string>(type: "nvarchar(250)", nullable: false),
@@ -708,6 +705,30 @@ namespace Backend.Migrations
                         principalTable: "TrainingBlog",
                         principalColumn: "BlogId",
                         onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Locations",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { -6, "Ахтопол" },
+                    { -5, "Бургас" },
+                    { -4, "Емине" },
+                    { -3, "Варна" },
+                    { -2, "Калиакра" },
+                    { -1, "Шабла" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Units",
+                columns: new[] { "UnitId", "UnitName" },
+                values: new object[,]
+                {
+                    { -4, "м/с" },
+                    { -3, "°C" },
+                    { -2, "Метра" },
+                    { -1, "Бала" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -830,9 +851,9 @@ namespace Backend.Migrations
                 column: "WaveUnitId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GlassStormIoData_Locations",
+                name: "IX_GlassStormIoData_LocationId",
                 table: "GlassStormIoData",
-                column: "Locations");
+                column: "LocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GlassStormIoData_TempUnitId",

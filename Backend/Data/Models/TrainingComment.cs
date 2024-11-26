@@ -8,12 +8,12 @@ namespace Backend.Data.Models
     public class TrainingComment
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CommentId { get; set; } 
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public string CommentId { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         [ForeignKey("TrainingBlog")]
-        public int ParentBlogId { get; set; }  
+        public string ParentBlogId { get; set; }  
         [Required]
         public virtual TrainingBlog ParentBlog { get; set; }  
 

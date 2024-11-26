@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241007150518_init")]
-    partial class init
+    [Migration("20241126164505_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -285,9 +285,6 @@ namespace Backend.Migrations
                     b.Property<int>("LocationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Locations")
-                        .HasColumnType("int");
-
                     b.Property<float?>("TempRead")
                         .HasColumnType("real");
 
@@ -308,7 +305,7 @@ namespace Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Locations");
+                    b.HasIndex("LocationId");
 
                     b.HasIndex("TempUnitId");
 
@@ -375,6 +372,38 @@ namespace Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("Locations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = -1,
+                            Name = "Шабла"
+                        },
+                        new
+                        {
+                            Id = -2,
+                            Name = "Калиакра"
+                        },
+                        new
+                        {
+                            Id = -3,
+                            Name = "Варна"
+                        },
+                        new
+                        {
+                            Id = -4,
+                            Name = "Емине"
+                        },
+                        new
+                        {
+                            Id = -5,
+                            Name = "Бургас"
+                        },
+                        new
+                        {
+                            Id = -6,
+                            Name = "Ахтопол"
+                        });
                 });
 
             modelBuilder.Entity("Backend.Data.Models.Media", b =>
@@ -405,11 +434,8 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Data.Models.SeaBlog", b =>
                 {
-                    b.Property<int>("BlogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogId"));
+                    b.Property<string>("BlogId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
@@ -437,11 +463,8 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Data.Models.SeaComment", b =>
                 {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
+                    b.Property<string>("CommentId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
@@ -455,8 +478,9 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("ParentBlogId")
-                        .HasColumnType("int");
+                    b.Property<string>("ParentBlogId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
@@ -474,11 +498,8 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Data.Models.TrainingBlog", b =>
                 {
-                    b.Property<int>("BlogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogId"));
+                    b.Property<string>("BlogId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
@@ -506,11 +527,8 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Data.Models.TrainingComment", b =>
                 {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
+                    b.Property<string>("CommentId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
@@ -524,8 +542,9 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("ParentBlogId")
-                        .HasColumnType("int");
+                    b.Property<string>("ParentBlogId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
@@ -646,12 +665,33 @@ namespace Backend.Migrations
                     b.Property<string>("UnitName")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .IsUnicode(true)
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("UnitId");
 
                     b.ToTable("Units");
+
+                    b.HasData(
+                        new
+                        {
+                            UnitId = -1,
+                            UnitName = "Бала"
+                        },
+                        new
+                        {
+                            UnitId = -2,
+                            UnitName = "Метра"
+                        },
+                        new
+                        {
+                            UnitId = -3,
+                            UnitName = "°C"
+                        },
+                        new
+                        {
+                            UnitId = -4,
+                            UnitName = "м/с"
+                        });
                 });
 
             modelBuilder.Entity("Backend.Data.Models.UniversalReading", b =>
@@ -1032,7 +1072,7 @@ namespace Backend.Migrations
                 {
                     b.HasOne("Backend.Data.Models.Locations", "Location")
                         .WithMany()
-                        .HasForeignKey("Locations")
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
