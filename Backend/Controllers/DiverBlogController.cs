@@ -31,6 +31,7 @@ namespace Backend.Controllers
             }
 
             var email = _jwtService.RetrieveEmailFromToken(token);
+            Console.WriteLine(email); // nothing is retrieved?? TokenToEmail does not work
             if (string.IsNullOrEmpty(email))
             {
                 throw new UnauthorizedAccessException("Invalid token.");

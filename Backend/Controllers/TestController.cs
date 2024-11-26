@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.Controllers
 {
@@ -19,6 +20,12 @@ namespace Backend.Controllers
 
         [HttpGet("test")]
         public IActionResult Test()
+        {
+            return Ok(new { message = "ok" });
+        }
+        [HttpGet("testAuth")]
+        [Authorize]
+        public IActionResult TestAuth()
         {
             return Ok(new { message = "ok" });
         }

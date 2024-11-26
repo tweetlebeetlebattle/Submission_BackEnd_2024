@@ -66,7 +66,11 @@ namespace Backend.Services
                     ValidateLifetime = true
                 }, out SecurityToken validatedToken);
 
-                var emailClaim = principal.FindFirst(JwtRegisteredClaimNames.Sub);
+                var emailClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+                if (emailClaim == null)
+                {
+                    Console.WriteLine("Email claim not found.");
+                }
                 return emailClaim?.Value;
             }
             catch (Exception)
