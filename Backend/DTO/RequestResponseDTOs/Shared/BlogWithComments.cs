@@ -12,6 +12,7 @@
 
     public class CommentDto
     {
+        public string CommentId { get; set; }
         public string ApplicationUserName { get; set; }
         public string MediaTextUrl { get; set; }
         public string MediaPictureUrl { get; set; }

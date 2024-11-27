@@ -49,8 +49,10 @@ namespace Backend.Controllers
         [HttpPost("CreateNewBlog")]
         public async Task<IActionResult> CreateNewBlog([FromForm] CreateNewBlogDto dto)
         {
+            await Console.Out.WriteLineAsync("1");
+            await Console.Out.WriteLineAsync(dto.ToString());
             var userId = await GetUserIdFromJwtAsync(); // Fetch user ID from token
-            var result = await _diverService.CreateNewBlogAsync(dto.Text, dto.Image, userId, dto.DateTimestamp);
+            var result = await _diverService.CreateNewBlogAsync(dto.Text, dto.Image, userId);
             return Ok(result);
         }
 
@@ -58,7 +60,7 @@ namespace Backend.Controllers
         public async Task<IActionResult> CreateNewComment([FromForm] CreateNewCommentDto dto)
         {
             var userId = await GetUserIdFromJwtAsync(); // Fetch user ID from token
-            var result = await _diverService.CreateNewCommentAsync(dto.BlogId, dto.Text, dto.Image, userId, dto.DateTimestamp);
+            var result = await _diverService.CreateNewCommentAsync(dto.BlogId, dto.Text, dto.Image, userId);
             return Ok(result);
         }
 

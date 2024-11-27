@@ -49,7 +49,7 @@ namespace Backend.Controllers
         public async Task<IActionResult> CreateNewBlog([FromForm] CreateNewBlogDto dto)
         {
             var userId = await GetUserIdFromJwtAsync(); // Fetch user ID from token
-            var result = await _weightlifterService.CreateNewBlogAsync(dto.Text, dto.Image, userId, dto.DateTimestamp);
+            var result = await _weightlifterService.CreateNewBlogAsync(dto.Text, dto.Image, userId);
             return Ok(result);
         }
 
@@ -57,7 +57,7 @@ namespace Backend.Controllers
         public async Task<IActionResult> CreateNewComment([FromForm] CreateNewCommentDto dto)
         {
             var userId = await GetUserIdFromJwtAsync(); // Fetch user ID from token
-            var result = await _weightlifterService.CreateNewCommentAsync(dto.BlogId, dto.Text, dto.Image, userId, dto.DateTimestamp);
+            var result = await _weightlifterService.CreateNewCommentAsync(dto.BlogId, dto.Text, dto.Image, userId);
             return Ok(result);
         }
 

@@ -14,7 +14,7 @@ namespace Backend.Services
             _s3BucketAWSService = s3BucketAWSService;
         }
 
-        public async Task<string> CreateNewBlogAsync(string text, IFormFile image, string userId, string dateTimestamp)
+        public async Task<string> CreateNewBlogAsync(string text, IFormFile image, string userId)
         {
             string textUrl = null, pictureUrl = null;
 
@@ -33,7 +33,7 @@ namespace Backend.Services
             return "Blog created successfully!";
         }
 
-        public async Task<string> CreateNewCommentAsync(string blogId, string text, IFormFile image, string userId, string dateTimestamp)
+        public async Task<string> CreateNewCommentAsync(string blogId, string text, IFormFile image, string userId)
         {
             string textUrl = null, pictureUrl = null;
 

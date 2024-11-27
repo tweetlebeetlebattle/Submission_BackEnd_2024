@@ -37,12 +37,13 @@ namespace Backend.Repositories
                         .Where(comment => comment.ApprovedStatus)
                         .Select(comment => new CommentDto
                         {
+                            CommentId = comment.CommentId,
                             ApplicationUserName = comment.ApplicationUser.UserName,
                             MediaTextUrl = comment.Media.TextUrl,
                             MediaPictureUrl = comment.Media.PictureUrl,
                             Time = comment.Time,
                         }).ToList()
-                }) 
+                })
                 .ToListAsync();
 
             return blogsWithComments;

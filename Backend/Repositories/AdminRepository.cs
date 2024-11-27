@@ -15,54 +15,56 @@ namespace Backend.Repositories
             context = _context;
         }
 
-        // Fetch all unapproved blog comments for both Training and Sea blogs
         public async Task<UnapprovedBlogCommentData> FetchAllUnapprovedBlogComments()
         {
-            // Fetch unapproved training comments
             var unapprovedTrainingComments = await context.TrainingComment
                 .Where(c => c.ApprovedStatus == false)
                 .Select(c => new UnapprovedBlogComment
                 {
                     Id = c.CommentId,
-                    TextUrl = c.Media.TextUrl, // Assuming Media.TextUrl exists
-                    PictureUrl = c.Media.PictureUrl // Assuming Media.PictureUrl exists
+                    TextUrl = c.Media.TextUrl, 
+                    PictureUrl = c.Media.PictureUrl, 
+                    Username = c.ApplicationUser.UserName, 
+                    TimeOfPosting = c.Time 
                 })
                 .ToListAsync();
 
-            // Fetch unapproved sea comments
             var unapprovedSeaComments = await context.SeaComment
                 .Where(c => c.ApprovedStatus == false)
                 .Select(c => new UnapprovedBlogComment
                 {
                     Id = c.CommentId,
-                    TextUrl = c.Media.TextUrl, // Assuming Media.TextUrl exists
-                    PictureUrl = c.Media.PictureUrl // Assuming Media.PictureUrl exists
+                    TextUrl = c.Media.TextUrl, 
+                    PictureUrl = c.Media.PictureUrl, 
+                    Username = c.ApplicationUser.UserName,
+                    TimeOfPosting = c.Time 
                 })
                 .ToListAsync();
 
-            // Fetch unapproved training blogs
             var unapprovedTrainingBlogs = await context.TrainingBlog
                 .Where(b => b.ApprovedStatus == false)
                 .Select(b => new UnapprovedBlogComment
                 {
                     Id = b.BlogId,
-                    TextUrl = b.Media.TextUrl, // Assuming Media.TextUrl exists
-                    PictureUrl = b.Media.PictureUrl // Assuming Media.PictureUrl exists
+                    TextUrl = b.Media.TextUrl, 
+                    PictureUrl = b.Media.PictureUrl, 
+                    Username = b.ApplicationUser.UserName, 
+                    TimeOfPosting = b.Time 
                 })
                 .ToListAsync();
 
-            // Fetch unapproved sea blogs
             var unapprovedSeaBlogs = await context.SeaBlog
                 .Where(b => b.ApprovedStatus == false)
                 .Select(b => new UnapprovedBlogComment
                 {
                     Id = b.BlogId,
-                    TextUrl = b.Media.TextUrl, // Assuming Media.TextUrl exists
-                    PictureUrl = b.Media.PictureUrl // Assuming Media.PictureUrl exists
+                    TextUrl = b.Media.TextUrl, 
+                    PictureUrl = b.Media.PictureUrl, 
+                    Username = b.ApplicationUser.UserName, 
+                    TimeOfPosting = b.Time 
                 })
                 .ToListAsync();
 
-            // Combine all unapproved data
             return new UnapprovedBlogCommentData
             {
                 UnapprovedData = unapprovedTrainingComments
@@ -72,8 +74,6 @@ namespace Backend.Repositories
                     .ToList()
             };
         }
-
-
         public async Task ApproveOrDeleteBlogComment(string id, string status)
         {
             bool isApproved = status.Equals("approved", StringComparison.OrdinalIgnoreCase);
