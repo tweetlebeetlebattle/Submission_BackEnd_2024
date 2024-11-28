@@ -79,11 +79,13 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<AdminRepository>();
 builder.Services.AddScoped<DiverRepository>();
 builder.Services.AddScoped<WeightlifterRepository>();
+builder.Services.AddScoped<UtilsRepository>();
 
 
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<DiverService>();
 builder.Services.AddScoped<WeightlifterService>();
+builder.Services.AddScoped<UtilityService>();
 
 builder.Services.AddScoped<UtilityService>();
 builder.Services.AddScoped<JWTService>();

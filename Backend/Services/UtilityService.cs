@@ -1,27 +1,29 @@
-﻿using Backend.Data; 
-using Microsoft.EntityFrameworkCore;
+﻿using Backend.Repositories;
 
 namespace Backend.Services
 {
     public class UtilityService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly UtilsRepository _utilsRepository;
 
-        public UtilityService(ApplicationDbContext context)
+        public UtilityService(UtilsRepository utilsRepository)
         {
-            _context = context;
+            _utilsRepository = utilsRepository;
+        }
+
+        public async Task<int> GetLocationIdByNameAsync(string locationName)
+        {
+            return await _utilsRepository.GetLocationIdByNameAsync(locationName);
+        }
+
+        public async Task<int> GetUnitIdByUnitNameAsync(string unitName)
+        {
+            return await _utilsRepository.GetUnitIdByUnitNameAsync(unitName);
         }
 
         public async Task<string?> GetUserIdByEmailAsync(string email)
         {
-            if (string.IsNullOrEmpty(email))
-                throw new ArgumentException("Email cannot be null or empty.", nameof(email));
-
-            var user = await _context.Users
-                .AsNoTracking() 
-                .FirstOrDefaultAsync(u => u.Email == email);
-
-            return user?.Id;
+            return await _utilsRepository.GetUserIdByEmailAsync(email);
         }
     }
 }

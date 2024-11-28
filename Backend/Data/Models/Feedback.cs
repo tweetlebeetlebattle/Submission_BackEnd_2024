@@ -8,7 +8,10 @@ namespace Backend.Data.Models
 {
     public class Feedback
     {
-        [Key, Column(Order = 0)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
         [StringLength(450)]
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }  

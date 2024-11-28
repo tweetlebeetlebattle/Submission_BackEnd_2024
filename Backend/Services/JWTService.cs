@@ -4,16 +4,19 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Backend.Services
 {
     public class JWTService
     {
         private readonly IConfiguration _configuration;
+        private readonly UtilityService _utilityService;
 
-        public JWTService(IConfiguration configuration)
+        public JWTService(IConfiguration configuration, UtilityService utilityService)
         {
             _configuration = configuration;
+            _utilityService = utilityService;
         }
 
         public string GenerateJwtTokenByEmail(string email)
@@ -78,6 +81,34 @@ namespace Backend.Services
                 // Token validation failed
                 return null;
             }
+        }
+
+        public async Task<string> GetUserIdFromJwtAsync(string authorizationHeader)
+        {
+            if (string.IsNullOrEmpty(authorizationHeader))
+            {
+                throw new UnauthorizedAccessException("Authorization header is missing.");
+            }
+
+            var token = authorizationHeader.Replace("Bearer ", "");
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new UnauthorizedAccessException("Authorization token is missing.");
+            }
+
+            var email = RetrieveEmailFromToken(token);
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new UnauthorizedAccessException("Invalid token.");
+            }
+
+            var userId = await _utilityService.GetUserIdByEmailAsync(email);
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new UnauthorizedAccessException("User not found.");
+            }
+
+            return userId;
         }
     }
 }

@@ -221,6 +221,52 @@ namespace Backend.Repositories
 
             return historicData;
         }
+        public async Task PostUserFeedback(
+            string userId,
+            int locationId,
+            float? waveRead = null,
+            int? waveUnitId = null,
+            float? tempRead = null,
+            int? tempUnitId = null,
+            float? windSpeedIndex = null,
+            int? windSpeedUnitId = null,
+            string? pictureUrl = null,
+            string? textUrl = null)
+        {
+            Media? media = null;
 
+            // Create Media entity if text or picture URL exists
+            if (!string.IsNullOrEmpty(pictureUrl) || !string.IsNullOrEmpty(textUrl))
+            {
+                media = new Media
+                {
+                    MediaId = Guid.NewGuid().ToString(),
+                    PictureUrl = pictureUrl,
+                    TextUrl = textUrl,
+                    ApplicationUserId = userId
+                };
+
+                await context.Media.AddAsync(media);
+                await context.SaveChangesAsync();
+            }
+
+            // Create Feedback entity
+            var feedback = new Feedback
+            {
+                ApplicationUserId = userId,
+                LocationId = locationId,
+                WaveRead = waveRead,
+                WaveUnitId = waveUnitId,
+                TempRead = tempRead,
+                TempUnitId = tempUnitId,
+                WindSpeedIndex = windSpeedIndex,
+                WindSpeedUnitId = windSpeedUnitId,
+                Time = DateTime.UtcNow,
+                MediaId = media?.MediaId
+            };
+
+            await context.Feedback.AddAsync(feedback);
+            await context.SaveChangesAsync();
+        }
     }
 }
