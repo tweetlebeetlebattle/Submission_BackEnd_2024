@@ -33,6 +33,14 @@ namespace Backend.Services
             await _adminRepository.DeleteFeedback(id);
             return $"Successfully deleted entity with ID: {id}";
         }
-
+        public async Task<ServerLogs> FetchAllServerLogs()
+        {
+            return await _adminRepository.FetchAllServerLogs();
+        }
+        public async Task<string> DeleteServerLog(string id)
+        {
+            await _adminRepository.DeleteServerLog(id);
+            return $"Successfully deleted entity with ID: {id}";
+        }
     }
 }

@@ -253,5 +253,36 @@ namespace Backend.Repositories
 
             await context.SaveChangesAsync();
         }
+
+        public async Task<ServerLogs> FetchAllServerLogs()
+        {
+            var logs = await context.DataFetchingLogs
+                .OrderByDescending(log => log.Time) 
+                .ToListAsync();
+
+            var serverLogs = logs.Select(log => new ServerLog
+            {
+                Id = log.Id.ToString(),
+                StatusLog = log.StatusLog,
+                Time = log.Time.ToString("yyyy-MM-dd HH:mm:ss")
+            }).ToList();
+
+            return new ServerLogs
+            {
+                _ServerLogs = serverLogs
+            };
+        }
+        public async Task DeleteServerLog(string id)
+        {
+            var log = await context.DataFetchingLogs.FirstOrDefaultAsync(l => l.Id.ToString() == id);
+
+            if (log == null)
+            {
+                throw new ArgumentException($"No log found with ID: {id}");
+            }
+
+            context.DataFetchingLogs.Remove(log);
+            await context.SaveChangesAsync();
+        }
     }
 }

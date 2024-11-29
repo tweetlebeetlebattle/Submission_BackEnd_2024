@@ -48,5 +48,17 @@ namespace Backend.Controllers
             var result = await adminService.DeleteFeedback(deleteFeedback.Id);
             return Ok(result);
         }
+        [HttpGet("FetchAllServerLogs")]
+        public async Task<IActionResult> FetchAllServerLogs()
+        {
+            var result = await adminService.FetchAllServerLogs();
+            return Ok(result);
+        }
+        [HttpPost("DeleteServerLog")]
+        public async Task<IActionResult> DeleteServerLog([FromBody] DeleteServerLog deleteServerLog)
+        {
+            var result = await adminService.DeleteServerLog(deleteServerLog.Id);
+            return Ok(result);
+        }
     }
 }
