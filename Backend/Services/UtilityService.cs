@@ -1,4 +1,5 @@
-﻿using Backend.Repositories;
+﻿using Backend.Data.Models;
+using Backend.Repositories;
 
 namespace Backend.Services
 {
@@ -24,6 +25,15 @@ namespace Backend.Services
         public async Task<string?> GetUserIdByEmailAsync(string email)
         {
             return await _utilsRepository.GetUserIdByEmailAsync(email);
+        }
+        public async Task<List<string>> GetAllUnitsAsync()
+        {
+            return await _utilsRepository.GetAllUnitsAsAListAsync();
+        }
+
+        public async Task<List<string>> GetAllLocationsAsync()
+        {
+            return await _utilsRepository.GetAllLocationsAsAListAsync();
         }
     }
 }

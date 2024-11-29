@@ -68,7 +68,6 @@ namespace Backend.Services
 
         public async Task PostUserFeedback(string userId, FeedbackDTO feedbackDto)
         {
-            // Prepare text and coordinates
             string finalText = feedbackDto.Text;
             if (!string.IsNullOrEmpty(feedbackDto.Coordinates))
             {
@@ -82,7 +81,6 @@ namespace Backend.Services
                 }
             }
 
-            // Upload text to S3 if it exists
             string textUrl = null;
             if (!string.IsNullOrEmpty(finalText))
             {
@@ -93,7 +91,6 @@ namespace Backend.Services
                 );
             }
 
-            // Upload image to S3 if it exists
             string pictureUrl = null;
             if (feedbackDto.Image != null)
             {
@@ -105,19 +102,34 @@ namespace Backend.Services
                 );
             }
 
-            // Get the Location ID using UtilityService
             int locationId = await _utilityService.GetLocationIdByNameAsync(feedbackDto.LocationName);
+            int? waveUnitId = null;
+            if (!string.IsNullOrEmpty(feedbackDto.WaveUnitId))
+            {
+                waveUnitId = await _utilityService.GetUnitIdByUnitNameAsync(feedbackDto.WaveUnitId);
+            }
 
-            // Pass all data to the repository method
+            int? tempUnitId = null;
+            if (!string.IsNullOrEmpty(feedbackDto.TempUnitId))
+            {
+                tempUnitId = await _utilityService.GetUnitIdByUnitNameAsync(feedbackDto.TempUnitId);
+            }
+
+            int? windUnitId = null;
+            if (!string.IsNullOrEmpty(feedbackDto.WindSpeedUnitId))
+            {
+                windUnitId = await _utilityService.GetUnitIdByUnitNameAsync(feedbackDto.WindSpeedUnitId);
+            }
+
             await _diverRepository.PostUserFeedback(
                 userId,
                 locationId,
                 feedbackDto.WaveRead,
-                feedbackDto.WaveUnitId,
+                waveUnitId,
                 feedbackDto.TempRead,
-                feedbackDto.TempUnitId,
-                feedbackDto.WindSpeedIndex,
-                feedbackDto.WindSpeedUnitId,
+                tempUnitId,
+                feedbackDto.windSpeedRead,
+                windUnitId,
                 pictureUrl,
                 textUrl
             );

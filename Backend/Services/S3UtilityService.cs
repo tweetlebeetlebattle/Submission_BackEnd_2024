@@ -25,16 +25,13 @@ public class S3BucketAWSService
             AutoCloseStream = true,
         };
 
-        // Upload the file to the specified bucket
         await _s3Client.PutObjectAsync(putRequest);
 
-        // Instead of generating a pre-signed URL, just return the public URL
         return _s3UtilityService.GetPublicUrlForObject(keyName);
     }
 
     public async Task<string> UploadTextAsync(string bucketName, string keyName, string textContent)
     {
-        // Convert the string content to a MemoryStream
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(textContent));
 
         var putRequest = new PutObjectRequest
@@ -42,14 +39,12 @@ public class S3BucketAWSService
             BucketName = bucketName,
             Key = keyName,
             InputStream = stream,
-            ContentType = "text/plain", // Set the appropriate MIME type for text
+            ContentType = "text/plain",
             AutoCloseStream = true,
         };
 
-        // Upload the text to the specified bucket
         await _s3Client.PutObjectAsync(putRequest);
 
-        // Return the public URL for the uploaded text
         return _s3UtilityService.GetPublicUrlForObject(keyName);
     }
 }
@@ -57,11 +52,11 @@ public class S3BucketAWSService
 public class S3UtilityService
 {
     private readonly string _bucketName = "bucketheadboris";
-    private readonly string _region = "eu-north-1"; // Ensure this matches your bucket's region
+    private readonly string _region = "eu-north-1"; 
 
     public string GetPublicUrlForObject(string objectKey)
     {
-        objectKey = Uri.EscapeDataString(objectKey); // Properly encode the object key
+        objectKey = Uri.EscapeDataString(objectKey);
         return $"https://{_bucketName}.s3.{_region}.amazonaws.com/{objectKey}";
     }
 }

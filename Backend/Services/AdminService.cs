@@ -23,5 +23,16 @@ namespace Backend.Services
             await _adminRepository.ApproveOrDeleteBlogComment(id, status);
             return $"Successfully {status} entity with ID: {id}";
         }
+        public async Task<FeedbacksToDisplay> FetchAllFeedbacks()
+        {
+            return await _adminRepository.FetchAllFeedbacks();
+        }
+
+        public async Task<string> DeleteFeedback(string id)
+        {
+            await _adminRepository.DeleteFeedback(id);
+            return $"Successfully deleted entity with ID: {id}";
+        }
+
     }
 }

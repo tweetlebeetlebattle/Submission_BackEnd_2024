@@ -56,5 +56,20 @@ namespace Backend.Repositories
 
             return user?.Id;
         }
+        public async Task<List<string>> GetAllUnitsAsAListAsync()
+        {
+            return await _context.Set<Units>()
+                .AsNoTracking()
+                .Select(unit => unit.UnitName)
+                .ToListAsync();
+        }
+
+        public async Task<List<string>> GetAllLocationsAsAListAsync()
+        {
+            return await _context.Set<Locations>()
+                .AsNoTracking()
+                .Select(location => location.Name)
+                .ToListAsync();
+        }
     }
 }

@@ -78,7 +78,6 @@ namespace Backend.Repositories
         {
             bool isApproved = status.Equals("approved", StringComparison.OrdinalIgnoreCase);
 
-            // Check Training Comments
             var trainingComment = await context.TrainingComment.FirstOrDefaultAsync(c => c.CommentId.ToString() == id);
             if (trainingComment != null)
             {
@@ -89,7 +88,6 @@ namespace Backend.Repositories
                 return;
             }
 
-            // Check Training Blogs
             var trainingBlog = await context.TrainingBlog.FirstOrDefaultAsync(b => b.BlogId.ToString() == id);
             if (trainingBlog != null)
             {
@@ -100,7 +98,6 @@ namespace Backend.Repositories
                 return;
             }
 
-            // Check Sea Comments
             var seaComment = await context.SeaComment.FirstOrDefaultAsync(c => c.CommentId.ToString() == id);
             if (seaComment != null)
             {
@@ -111,7 +108,6 @@ namespace Backend.Repositories
                 return;
             }
 
-            // Check Sea Blogs
             var seaBlog = await context.SeaBlog.FirstOrDefaultAsync(b => b.BlogId.ToString() == id);
             if (seaBlog != null)
             {
@@ -203,6 +199,59 @@ namespace Backend.Repositories
                 context.SeaComment.Remove(comment);
                 await context.SaveChangesAsync();
             }
+        }
+
+        public async Task<FeedbacksToDisplay> FetchAllFeedbacks()
+        {
+            var feedbacks = await context.Feedback
+                .Include(f => f.Media)
+                .Include(f => f.ApplicationUser)
+                .Include(f => f.Location) 
+                .Include(f => f.WaveUnit) 
+                .Include(f => f.TempUnit)
+                .Include(f => f.WindSpeedUnit) 
+                .Select(f => new FeedbackToDisplay
+                {
+                    Id = f.Id,
+                    Username = f.ApplicationUser.UserName,
+                    LocationName = f.Location.Name, 
+                    Date = f.Time.ToString(),
+                    WaveRead = f.WaveRead,
+                    WaveUnitName = f.WaveUnit != null ? f.WaveUnit.UnitName : null,
+                    TempRead = f.TempRead,
+                    TempUnitName = f.TempUnit != null ? f.TempUnit.UnitName : null,
+                    windSpeedRead = f.WindSpeedIndex,
+                    WindSpeedUnitName = f.WindSpeedUnit != null ? f.WindSpeedUnit.UnitName : null,
+                    ImageUrl = f.Media != null ? f.Media.PictureUrl : null,
+                    TextUrl = f.Media != null ? f.Media.TextUrl : null
+                })
+                .ToListAsync();
+
+            return new FeedbacksToDisplay
+            {
+                Feedbacks = feedbacks
+            };
+        }
+
+        public async Task DeleteFeedback(string id)
+        {
+            var feedback = await context.Feedback
+                .Include(f => f.Media)
+                .FirstOrDefaultAsync(f => f.Id == id);
+
+            if (feedback == null)
+            {
+                throw new ArgumentException("Feedback with the specified ID does not exist.");
+            }
+
+            if (feedback.Media != null)
+            {
+                context.Media.Remove(feedback.Media);
+            }
+
+            context.Feedback.Remove(feedback);
+
+            await context.SaveChangesAsync();
         }
     }
 }

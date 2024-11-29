@@ -25,7 +25,6 @@ namespace Backend.Controllers
             try
             {
                 var userId = await _jwtService.GetUserIdFromJwtAsync(Request.Headers["Authorization"]);
-
                 await _diverService.PostUserFeedback(userId, feedbackDto);
 
                 return Ok(new { Message = "User feedback submitted successfully." });

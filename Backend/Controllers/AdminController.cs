@@ -35,5 +35,18 @@ namespace Backend.Controllers
             var result = await adminService.ApproveOrRejectBlogCommentAsync(dto.Id, dto.Status);
             return Ok(result);
         }
+
+        [HttpGet("FetchAllFeedbacks")]
+        public async Task<IActionResult> FetchAllFeedbacks()
+        {
+            var result = await adminService.FetchAllFeedbacks();
+            return Ok(result);
+        }
+        [HttpPost("DeleteFeedback")]
+        public async Task<IActionResult> DeleteFeedback([FromBody] DeleteFeedback deleteFeedback)
+        {
+            var result = await adminService.DeleteFeedback(deleteFeedback.Id);
+            return Ok(result);
+        }
     }
 }
