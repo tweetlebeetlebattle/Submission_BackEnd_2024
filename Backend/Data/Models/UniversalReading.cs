@@ -7,11 +7,13 @@ namespace Backend.Data.Models
 {
     public class UniversalReading
     {
-        [Key, Column(Order = 0)]
-        [Required]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
         [StringLength(450)]
         [ForeignKey("ApplicationUser")]
-        public string ApplicationUserId { get; set; }  // Matches .NET Identity User ID type
+        public string ApplicationUserId { get; set; }  
 
         [Required]
         public virtual ApplicationUser ApplicationUser { get; set; }
@@ -32,6 +34,6 @@ namespace Backend.Data.Models
         [Required]
         public DateTime Time { get; set; }  
         [Required]
-        public bool IsPublic { get; set; } = false;  // Indicates whether the data is public (default is false)
+        public bool IsPublic { get; set; } = false;  
     }
 }

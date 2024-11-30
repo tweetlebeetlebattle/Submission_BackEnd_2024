@@ -9,7 +9,7 @@ namespace Backend.Data.Models
     {
         [Key]
         [StringLength(250)]
-        public string TrainingLogId { get; set; }  // UUID
+        public string TrainingLogId { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         [StringLength(450)]
@@ -39,6 +39,6 @@ namespace Backend.Data.Models
         [Required]
         public DateTime Time { get; set; }  
         [Required]
-        public bool IsPublic { get; set; } = false;  // Indicates whether the data is public (default is false)
+        public bool IsPublic { get; set; } = false; 
     }
 }

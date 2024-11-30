@@ -1,4 +1,4 @@
-﻿namespace Backend.Configuration
+﻿namespace Backend.Properties.Configuration
 {
     public class AwsConfig
     {

@@ -56,5 +56,13 @@ namespace Backend.Services
         {
             return await _weightlifterRepository.FetchAllApprovedBlogDataAsync();
         }
+        // FetchAllUserTrainingAndUniversalLogs
+        // FetchPublicUserData
+        // FetchAllTrainingUnits
+        // CreateNewUniversalLog
+        // AddToUniversalLog
+        // CreateNewTraining
+        // UpdateUniversalLogPublicity
+        // UpdateTrainingLogPublicity
     }
 }

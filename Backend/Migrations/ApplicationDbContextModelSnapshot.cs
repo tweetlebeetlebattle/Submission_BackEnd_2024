@@ -698,10 +698,13 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Data.Models.UniversalReading", b =>
                 {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnOrder(0);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
@@ -720,7 +723,9 @@ namespace Backend.Migrations
                     b.Property<int>("UnitId")
                         .HasColumnType("int");
 
-                    b.HasKey("ApplicationUserId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UnitId");
 

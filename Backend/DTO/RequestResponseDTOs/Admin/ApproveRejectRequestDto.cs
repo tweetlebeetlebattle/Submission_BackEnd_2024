@@ -3,6 +3,6 @@
     public class ApproveRejectRequestDto
     {
         public string Id { get; set; }
-        public string Status { get; set; } // "approved" or "rejected"
+        public string Status { get; set; } 
     }
 }

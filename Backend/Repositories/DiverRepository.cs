@@ -235,7 +235,6 @@ namespace Backend.Repositories
         {
             Media? media = null;
 
-            // Create Media entity if text or picture URL exists
             if (!string.IsNullOrEmpty(pictureUrl) || !string.IsNullOrEmpty(textUrl))
             {
                 media = new Media
@@ -250,7 +249,6 @@ namespace Backend.Repositories
                 await context.SaveChangesAsync();
             }
 
-            // Create Feedback entity
             var feedback = new Feedback
             {
                 ApplicationUserId = userId,

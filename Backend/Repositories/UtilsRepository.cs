@@ -1,8 +1,6 @@
 ﻿using Backend.Data;
 using Backend.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
 
 namespace Backend.Repositories
 {
@@ -70,6 +68,28 @@ namespace Backend.Repositories
                 .AsNoTracking()
                 .Select(location => location.Name)
                 .ToListAsync();
+        }
+
+        public async Task<int> FetchTrainingUnitIdByName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Unit name cannot be null or empty.", nameof(name));
+
+            var unit = await _context.Set<TrainingUnits>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.UnitName.ToLower() == name.ToLower());
+
+            if (unit == null)
+            {
+                unit = new TrainingUnits()
+                {
+                    UnitName = name
+                };
+                await _context.TrainingUnits.AddAsync(unit);
+                await _context.SaveChangesAsync();
+            }
+
+            return unit.Id;
         }
     }
 }

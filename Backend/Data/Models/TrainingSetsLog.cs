@@ -8,7 +8,7 @@ namespace Backend.Data.Models
     {
         [Key]
         [StringLength(250)]
-        public string WorkSetId { get; set; }  // UUID
+        public string WorkSetId { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         [ForeignKey("TrainingLog")]

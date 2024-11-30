@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -266,6 +266,7 @@ namespace Backend.Migrations
                 name: "UniversalReading",
                 columns: table => new
                 {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Reading = table.Column<float>(type: "real", nullable: false),
@@ -275,7 +276,7 @@ namespace Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UniversalReading", x => x.ApplicationUserId);
+                    table.PrimaryKey("PK_UniversalReading", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UniversalReading_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
@@ -510,6 +511,7 @@ namespace Backend.Migrations
                 name: "Feedback",
                 columns: table => new
                 {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: false),
                     WaveRead = table.Column<float>(type: "real", nullable: true),
@@ -523,7 +525,7 @@ namespace Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Feedback", x => x.ApplicationUserId);
+                    table.PrimaryKey("PK_Feedback", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Feedback_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
@@ -682,7 +684,7 @@ namespace Backend.Migrations
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MediaId = table.Column<string>(type: "nvarchar(250)", nullable: false),
-                    ApprovedStatus = table.Column<bool>(type: "bit", nullable: true)
+                    ApprovedStatus = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -814,6 +816,11 @@ namespace Backend.Migrations
                 name: "IX_DailyHTMLReading_WaveUnitId",
                 table: "DailyHTMLReading",
                 column: "WaveUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedback_ApplicationUserId",
+                table: "Feedback",
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Feedback_LocationId",
@@ -966,6 +973,11 @@ namespace Backend.Migrations
                 name: "IX_TrainingSetsLog_TrainingLogId",
                 table: "TrainingSetsLog",
                 column: "TrainingLogId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UniversalReading_ApplicationUserId",
+                table: "UniversalReading",
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UniversalReading_UnitId",
