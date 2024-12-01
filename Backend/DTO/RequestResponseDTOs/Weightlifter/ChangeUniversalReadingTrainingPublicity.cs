@@ -3,6 +3,6 @@
     public class ChangeUniversalReadingTrainingPublicity
     {
         public string Name { get; set; }
-        public string IsPublic { get; set; }
+        public bool IsPublic { get; set; }
     }
 }

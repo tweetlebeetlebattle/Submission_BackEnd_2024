@@ -91,5 +91,21 @@ namespace Backend.Repositories
 
             return unit.Id;
         }
+        public async Task<string> CreateNewMediaReturnId(string userId, string? imageUrl, string? pictureUrl)
+        {
+            var newMedia = new Media
+            {
+                MediaId = Guid.NewGuid().ToString(), 
+                TextUrl = imageUrl,
+                PictureUrl = pictureUrl,
+                ApplicationUserId = userId
+            };
+
+            await _context.Media.AddAsync(newMedia);
+
+            await _context.SaveChangesAsync();
+
+            return newMedia.MediaId;
+        }
     }
 }

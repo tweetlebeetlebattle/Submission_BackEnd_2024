@@ -8,7 +8,7 @@ namespace Backend.DTO.ModifiedDataDTO.Weightlifter
         public string Name { get; set; }
         public DateTime Date { get; set; }
         public double TargetWeight { get; set; }
-        public TrainingUnits Unit { get; set; }
+        public int UnitId { get; set; }
         public int TargetSets { get; set; }
         public int TargetReps { get; set; }
         public List<SetModified> Sets { get; set; }
@@ -16,6 +16,6 @@ namespace Backend.DTO.ModifiedDataDTO.Weightlifter
     public class SetModified
     {
         public int Reps { get; set; }
-        public Media? Media { get; set; }
+        public string? MediaId { get; set; }
     }
 }

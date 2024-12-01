@@ -128,17 +128,12 @@ namespace Backend.Repositories
             return unit.Id;
         }
         // FetchAllUserTrainingAndUniversalReading
-        public async Task<AllUniversalLogsAndTraining> FetchAllUserTrainingAndUniversalReading(string username)
+        public async Task<AllUniversalLogsAndTraining> FetchAllUserTrainingAndUniversalReading(string userId)
         {
             var result = new AllUniversalLogsAndTraining
             {
                 PackagedReadings = new List<PackagedUniversalReading>()
             };
-
-            var user = await context.Users.FirstOrDefaultAsync(u => u.UserName == username);
-            if (user == null) return result;
-
-            var userId = user.Id;
 
             var universalReadings = await context.UniversalReading
                 .Where(ur => ur.ApplicationUserId == userId)
@@ -314,12 +309,12 @@ namespace Backend.Repositories
                 .FirstOrDefaultAsync();
 
             bool isPublic = existingTraining != null ? existingTraining.IsPublic : false;
-
+            TrainingUnits unit = await context.TrainingUnits.Where(u => u.Id == modifiedDTO.UnitId).FirstOrDefaultAsync();
             var trainingLog = new TrainingLog
             {
                 ExerciseName = modifiedDTO.Name,
                 TargetWorkingWeight = (float)modifiedDTO.TargetWeight,
-                Unit = modifiedDTO.Unit,
+                Unit = unit,
                 TargetSetCount = modifiedDTO.TargetSets,
                 TargetRepsCount = modifiedDTO.TargetReps,
                 ApplicationUserId = userId,
@@ -335,7 +330,7 @@ namespace Backend.Repositories
                 TrainingLogId = trainingLog.TrainingLogId,
                 DoneSetCount = index + 1,
                 DoneRepCount = set.Reps,
-                MediaId = set.Media?.MediaId,
+                MediaId = set.MediaId,
                 Time = DateTime.UtcNow
             }).ToList();
 
