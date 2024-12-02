@@ -41,7 +41,7 @@ namespace Backend.Controllers
             }
         }
         [HttpGet("FetchPublicUserData")]
-        public async Task<IActionResult> FetchPublicUserData([FromForm] string Username)
+        public async Task<IActionResult> FetchPublicUserData([FromQuery] string Username)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace Backend.Controllers
             {
                 var result = await _weightlifterService.FetchAllTrainingUnits();
 
-                return Ok(new { Data = result });
+                return Ok(new { result });
             }
             catch (Exception ex)
             {
@@ -69,7 +69,7 @@ namespace Backend.Controllers
             }
         }
         [HttpPost("CreateNewUniversalReading")]
-        public async Task<IActionResult> CreateNewUniversalReading([FromForm] CreateUniversalReading createUniversalReading)
+        public async Task<IActionResult> CreateNewUniversalReading([FromBody] CreateUniversalReading createUniversalReading)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace Backend.Controllers
             }
         }
         [HttpPost("UpdateUniversalReadingPublicity")]
-        public async Task<IActionResult> UpdateUniversalReadingPublicity([FromForm] ChangeUniversalReadingTrainingPublicity changeForm)
+        public async Task<IActionResult> UpdateUniversalReadingPublicity([FromBody] ChangeUniversalReadingTrainingPublicity changeForm)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace Backend.Controllers
             }
         }
         [HttpPost("UpdateTrainingLogPublicity")]
-        public async Task<IActionResult> UpdateTrainingLogPublicity([FromForm] ChangeUniversalReadingTrainingPublicity changeForm)
+        public async Task<IActionResult> UpdateTrainingLogPublicity([FromBody] ChangeUniversalReadingTrainingPublicity changeForm)
         {
             try
             {

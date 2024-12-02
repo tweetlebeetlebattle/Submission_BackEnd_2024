@@ -137,61 +137,69 @@ namespace Backend.Repositories
 
             var universalReadings = await context.UniversalReading
                 .Where(ur => ur.ApplicationUserId == userId)
+                .Include(ur => ur.Unit) 
                 .ToListAsync();
 
             var trainingLogs = await context.TrainingLog
                 .Where(tl => tl.ApplicationUserId == userId)
-                .Include(tl => tl.Unit)
+                .Include(tl => tl.Unit) 
                 .ToListAsync();
 
-            var trainingSetsLogs = await context.TrainingSetsLog
-                .Where(tsl => trainingLogs.Select(tl => tl.TrainingLogId).Contains(tsl.TrainingLogId))
-                .ToListAsync();
+            var trainingSetsLogs = trainingLogs.Any()
+                ? await context.TrainingSetsLog
+                    .Where(tsl => trainingLogs.Select(tl => tl.TrainingLogId).Contains(tsl.TrainingLogId))
+                    .ToListAsync()
+                : new List<TrainingSetsLog>();
 
             var groupedUniversalReadings = universalReadings
                 .GroupBy(ur => ur.Title)
                 .Select(group => new PackagedUniversalReading
                 {
                     Name = group.Key,
-                    IsPublic = group.First().IsPublic,
+                    IsPublic = group.FirstOrDefault()?.IsPublic ?? false,
                     IsTraining = false,
                     UniversalReadingsTrainings = group.Select(ur => new _UniversalReading
                     {
                         Measurment = ur.Reading.ToString(),
-                        UnitName = ur.Unit.UnitName,
+                        UnitName = ur.Unit?.UnitName ?? "Unknown Unit",
                         Date = ur.Time.ToString("yyyy-MM-dd"),
-                        IsSucessTraining = null 
+                        IsSucessTraining = null
                     }).ToList()
                 }).ToList();
 
-            var groupedTrainingLogs = trainingLogs
-                .GroupBy(tl => tl.ExerciseName)
-                .Select(group => new PackagedUniversalReading
-                {
-                    Name = group.Key,
-                    IsPublic = group.First().IsPublic,
-                    IsTraining = true,
-                    UniversalReadingsTrainings = group.Select(tl =>
+            var groupedTrainingLogs = trainingLogs.Any()
+                ? trainingLogs
+                    .GroupBy(tl => tl.ExerciseName)
+                    .Select(group => new PackagedUniversalReading
                     {
-                        var relatedSetsLogs = trainingSetsLogs.Where(tsl => tsl.TrainingLogId == tl.TrainingLogId).ToList();
-                        var isSuccess = relatedSetsLogs.Count == tl.TargetSetCount &&
-                                        relatedSetsLogs.All(tsl => tsl.DoneRepCount == tl.TargetRepsCount);
-
-                        return new _UniversalReading
+                        Name = group.Key,
+                        IsPublic = group.FirstOrDefault()?.IsPublic ?? false,
+                        IsTraining = true,
+                        UniversalReadingsTrainings = group.Select(tl =>
                         {
-                            Measurment = tl.TargetWorkingWeight.ToString(),
-                            UnitName = tl.Unit?.UnitName,
-                            Date = tl.Time.ToString("yyyy-MM-dd"),
-                            IsSucessTraining = isSuccess
-                        };
+                            var relatedSetsLogs = trainingSetsLogs
+                                .Where(tsl => tsl.TrainingLogId == tl.TrainingLogId)
+                                .ToList();
+                            var isSuccess = relatedSetsLogs.Count == tl.TargetSetCount &&
+                                            relatedSetsLogs.All(tsl => tsl.DoneRepCount == tl.TargetRepsCount);
+
+                            return new _UniversalReading
+                            {
+                                Measurment = tl.TargetWorkingWeight.ToString(),
+                                UnitName = tl.Unit?.UnitName ?? "Unknown Unit",
+                                Date = tl.Time.ToString("yyyy-MM-dd"),
+                                IsSucessTraining = isSuccess
+                            };
+                        }).ToList()
                     }).ToList()
-                }).ToList();
+                : new List<PackagedUniversalReading>();
 
             result.PackagedReadings.AddRange(groupedUniversalReadings);
             result.PackagedReadings.AddRange(groupedTrainingLogs);
 
             return result;
         }
+
 
         // FetchPublicUserData
         public async Task<AllUniversalLogsAndTraining> FetchPublicUserData(string username)
@@ -208,61 +216,71 @@ namespace Backend.Repositories
 
             var universalReadings = await context.UniversalReading
                 .Where(ur => ur.ApplicationUserId == userId && ur.IsPublic)
+                .Include(ur => ur.Unit) 
                 .ToListAsync();
 
             var trainingLogs = await context.TrainingLog
                 .Where(tl => tl.ApplicationUserId == userId && tl.IsPublic)
-                .Include(tl => tl.Unit)
+                .Include(tl => tl.Unit) 
                 .ToListAsync();
 
-            var trainingSetsLogs = await context.TrainingSetsLog
-                .Where(tsl => trainingLogs.Select(tl => tl.TrainingLogId).Contains(tsl.TrainingLogId))
-                .ToListAsync();
+            var trainingSetsLogs = trainingLogs.Any()
+                ? await context.TrainingSetsLog
+                    .Where(tsl => trainingLogs.Select(tl => tl.TrainingLogId).Contains(tsl.TrainingLogId))
+                    .ToListAsync()
+                : new List<TrainingSetsLog>();
 
-            var groupedUniversalReadings = universalReadings
-                .GroupBy(ur => ur.Title)
-                .Select(group => new PackagedUniversalReading
-                {
-                    Name = group.Key,
-                    IsPublic = group.First().IsPublic,
-                    IsTraining = false,
-                    UniversalReadingsTrainings = group.Select(ur => new _UniversalReading
+            var groupedUniversalReadings = universalReadings.Any()
+                ? universalReadings
+                    .GroupBy(ur => ur.Title)
+                    .Select(group => new PackagedUniversalReading
                     {
-                        Measurment = ur.Reading.ToString(),
-                        UnitName = ur.Unit.UnitName,
-                        Date = ur.Time.ToString("yyyy-MM-dd"),
-                        IsSucessTraining = null 
-                    }).ToList()
-                }).ToList();
-
-            var groupedTrainingLogs = trainingLogs
-                .GroupBy(tl => tl.ExerciseName)
-                .Select(group => new PackagedUniversalReading
-                {
-                    Name = group.Key,
-                    IsPublic = group.First().IsPublic,
-                    IsTraining = true,
-                    UniversalReadingsTrainings = group.Select(tl =>
-                    {
-                        var relatedSetsLogs = trainingSetsLogs.Where(tsl => tsl.TrainingLogId == tl.TrainingLogId).ToList();
-                        var isSuccess = relatedSetsLogs.Count == tl.TargetSetCount &&
-                                        relatedSetsLogs.All(tsl => tsl.DoneRepCount == tl.TargetRepsCount);
-
-                        return new _UniversalReading
+                        Name = group.Key,
+                        IsPublic = group.FirstOrDefault()?.IsPublic ?? false,
+                        IsTraining = false,
+                        UniversalReadingsTrainings = group.Select(ur => new _UniversalReading
                         {
-                            Measurment = tl.TargetWorkingWeight.ToString(),
-                            UnitName = tl.Unit?.UnitName,
-                            Date = tl.Time.ToString("yyyy-MM-dd"),
-                            IsSucessTraining = isSuccess
-                        };
+                            Measurment = ur.Reading.ToString(),
+                            UnitName = ur.Unit?.UnitName ?? "Unknown Unit",
+                            Date = ur.Time.ToString("yyyy-MM-dd"),
+                            IsSucessTraining = null
+                        }).ToList()
                     }).ToList()
-                }).ToList();
+                : new List<PackagedUniversalReading>();
+
+            var groupedTrainingLogs = trainingLogs.Any()
+                ? trainingLogs
+                    .GroupBy(tl => tl.ExerciseName)
+                    .Select(group => new PackagedUniversalReading
+                    {
+                        Name = group.Key,
+                        IsPublic = group.FirstOrDefault()?.IsPublic ?? false,
+                        IsTraining = true,
+                        UniversalReadingsTrainings = group.Select(tl =>
+                        {
+                            var relatedSetsLogs = trainingSetsLogs
+                                .Where(tsl => tsl.TrainingLogId == tl.TrainingLogId)
+                                .ToList();
+                            var isSuccess = relatedSetsLogs.Count == tl.TargetSetCount &&
+                                            relatedSetsLogs.All(tsl => tsl.DoneRepCount == tl.TargetRepsCount);
+
+                            return new _UniversalReading
+                            {
+                                Measurment = tl.TargetWorkingWeight.ToString(),
+                                UnitName = tl.Unit?.UnitName ?? "Unknown Unit",
+                                Date = tl.Time.ToString("yyyy-MM-dd"),
+                                IsSucessTraining = isSuccess
+                            };
+                        }).ToList()
+                    }).ToList()
+                : new List<PackagedUniversalReading>();
 
             result.PackagedReadings.AddRange(groupedUniversalReadings);
             result.PackagedReadings.AddRange(groupedTrainingLogs);
 
             return result;
         }
+
 
 
         // FetchAllTrainingUnits
@@ -285,7 +303,6 @@ namespace Backend.Repositories
                 .FirstOrDefaultAsync();
 
             bool isPublic = existingReading != null ? existingReading.IsPublic : false;
-
             var newUniversalReading = new UniversalReading
             {
                 Title = name,
