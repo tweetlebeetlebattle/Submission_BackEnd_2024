@@ -128,5 +128,19 @@ namespace Backend.Controllers
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+        [HttpGet("FetchAllTrainingTitles")]
+        public async Task<IActionResult> FetchAllTrainingTitles()
+        {
+            try
+            {
+                var result = await _weightlifterService.FetchAllTrainingTitles();
+
+                return Ok(new { result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
     }
 }

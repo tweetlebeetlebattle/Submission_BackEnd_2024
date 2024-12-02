@@ -73,6 +73,10 @@ namespace Backend.Services
         {
             return await _weightlifterRepository.FetchAllTrainingUnits();
         }
+        public async Task<List<string>> FetchAllTrainingTitles()
+        {
+            return await _weightlifterRepository.FetchAllTrainingTitles();
+        }
         public async Task CreateNewUniversalReading(string userId, CreateUniversalReading createUniversalReading)
         {
             int trainingUnitId = await this._utilityService.FetchTrainingUnitIdByName(createUniversalReading.UnitName);

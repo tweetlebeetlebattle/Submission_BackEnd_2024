@@ -293,7 +293,15 @@ namespace Backend.Repositories
 
             return trainingUnits;
         }
+        public async Task<List<string>> FetchAllTrainingTitles()
+        {
+            var trainingUnits = await context.TrainingLog
+                .AsNoTracking()
+                .Select(unit => unit.ExerciseName)
+                .ToListAsync();
 
+            return trainingUnits;
+        }
 
         // CreateNewUniversalReading
         public async Task CreateNewUniversalReading(string userId, string name, double measurement, int trainingUnitId, DateTime dateTime)
