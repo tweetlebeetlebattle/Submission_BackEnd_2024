@@ -15,30 +15,32 @@ namespace Backend.Controllers
         {
             _utilityService = utilityService;
         }
+
         [HttpGet("GetAllUnits")]
-        public async Task<ActionResult<List<string>>> GetAllUnits()
+        public async Task<IActionResult> GetAllUnits()
         {
             try
             {
                 var units = await _utilityService.GetAllUnitsAsync();
-                return Ok(units);
+                return Ok(new { Message = "Units retrieved successfully.", Data = units });
             }
             catch (System.Exception ex)
             {
-                return StatusCode(500, new { message = "Error retrieving units.", details = ex.Message });
+                return StatusCode(500, new { Message = "Error retrieving units.", Details = ex.Message });
             }
         }
+
         [HttpGet("GetAllLocations")]
-        public async Task<ActionResult<List<string>>> GetAllLocations()
+        public async Task<IActionResult> GetAllLocations()
         {
             try
             {
                 var locations = await _utilityService.GetAllLocationsAsync();
-                return Ok(locations);
+                return Ok(new { Message = "Locations retrieved successfully.", Data = locations });
             }
             catch (System.Exception ex)
             {
-                return StatusCode(500, new { message = "Error retrieving locations.", details = ex.Message });
+                return StatusCode(500, new { Message = "Error retrieving locations.", Details = ex.Message });
             }
         }
     }

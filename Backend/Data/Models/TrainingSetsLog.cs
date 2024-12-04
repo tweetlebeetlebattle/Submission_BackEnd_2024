@@ -26,6 +26,7 @@ namespace Backend.Data.Models
         public virtual Media? Media { get; set; }  
 
         [Required]
-        public DateTime Time { get; set; }  
+        public DateTime Time { get; set; }
+
     }
 }

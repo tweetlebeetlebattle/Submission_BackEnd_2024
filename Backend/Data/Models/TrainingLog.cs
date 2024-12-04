@@ -39,6 +39,6 @@ namespace Backend.Data.Models
         [Required]
         public DateTime Time { get; set; }  
         [Required]
-        public bool IsPublic { get; set; } = false; 
+        public bool IsPublic { get; set; } = false;
     }
 }

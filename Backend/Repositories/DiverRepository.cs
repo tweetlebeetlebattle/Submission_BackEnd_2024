@@ -266,5 +266,11 @@ namespace Backend.Repositories
             await context.Feedback.AddAsync(feedback);
             await context.SaveChangesAsync();
         }
+        public async Task<int> FetchNumberOfBlogs()
+        {
+            int result = await context.SeaBlog
+                .CountAsync(blog => blog.ApprovedStatus); 
+            return result;
+        }
     }
 }

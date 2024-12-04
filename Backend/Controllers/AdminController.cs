@@ -1,5 +1,4 @@
-﻿
-using Backend.DTO.RequestResponseDTOs.Admin;
+﻿using Backend.DTO.RequestResponseDTOs.Admin;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,46 +18,91 @@ namespace Backend.Controllers
         [HttpGet("FetchAllUnapprovedBlogComments")]
         public async Task<IActionResult> FetchAllUnapprovedBlogComments()
         {
-            var result = await adminService.FetchAllUnapprovedBlogCommentsAsync();
-            return Ok(result);
+            try
+            {
+                var result = await adminService.FetchAllUnapprovedBlogCommentsAsync();
+                return Ok(new { Message = "Unapproved blog comments fetched successfully.", Data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
         }
 
         [HttpPost("ApproveOrRejectBlogComment")]
         public async Task<IActionResult> ApproveOrRejectBlogComment([FromBody] ApproveRejectRequestDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Id) || string.IsNullOrWhiteSpace(dto.Status))
-                return BadRequest("Invalid request. ID and status are required.");
+            try
+            {
+                if (string.IsNullOrWhiteSpace(dto.Id) || string.IsNullOrWhiteSpace(dto.Status))
+                    return BadRequest(new { Message = "Invalid request. ID and status are required." });
 
-            if (dto.Status != "approved" && dto.Status != "rejected")
-                return BadRequest("Status must be either 'approved' or 'rejected'.");
+                if (dto.Status != "approved" && dto.Status != "rejected")
+                    return BadRequest(new { Message = "Status must be either 'approved' or 'rejected'." });
 
-            var result = await adminService.ApproveOrRejectBlogCommentAsync(dto.Id, dto.Status);
-            return Ok(result);
+                var result = await adminService.ApproveOrRejectBlogCommentAsync(dto.Id, dto.Status);
+                return Ok(new { Message = "Blog comment status updated successfully.", Data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
         }
 
         [HttpGet("FetchAllFeedbacks")]
         public async Task<IActionResult> FetchAllFeedbacks()
         {
-            var result = await adminService.FetchAllFeedbacks();
-            return Ok(result);
+            try
+            {
+                var result = await adminService.FetchAllFeedbacks();
+                return Ok(new { Message = "All feedbacks fetched successfully.", Data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
         }
+
         [HttpPost("DeleteFeedback")]
         public async Task<IActionResult> DeleteFeedback([FromBody] DeleteFeedback deleteFeedback)
         {
-            var result = await adminService.DeleteFeedback(deleteFeedback.Id);
-            return Ok(result);
+            try
+            {
+                var result = await adminService.DeleteFeedback(deleteFeedback.Id);
+                return Ok(new { Message = "Feedback deleted successfully.", Data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
         }
+
         [HttpGet("FetchAllServerLogs")]
         public async Task<IActionResult> FetchAllServerLogs()
         {
-            var result = await adminService.FetchAllServerLogs();
-            return Ok(result);
+            try
+            {
+                var result = await adminService.FetchAllServerLogs();
+                return Ok(new { Message = "Server logs fetched successfully.", Data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
         }
+
         [HttpPost("DeleteServerLog")]
         public async Task<IActionResult> DeleteServerLog([FromBody] DeleteServerLog deleteServerLog)
         {
-            var result = await adminService.DeleteServerLog(deleteServerLog.Id);
-            return Ok(result);
+            try
+            {
+                var result = await adminService.DeleteServerLog(deleteServerLog.Id);
+                return Ok(new { Message = "Server log deleted successfully.", Data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
         }
     }
 }

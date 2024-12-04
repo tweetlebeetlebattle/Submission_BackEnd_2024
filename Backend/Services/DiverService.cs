@@ -65,6 +65,10 @@ namespace Backend.Services
         {
             return await _diverRepository.FetchAllApprovedBlogDataAsync();
         }
+        public async Task<int> FetchNumberOfBlogs()
+        {
+            return await _diverRepository.FetchNumberOfBlogs();
+        }
 
         public async Task PostUserFeedback(string userId, FeedbackDTO feedbackDto)
         {

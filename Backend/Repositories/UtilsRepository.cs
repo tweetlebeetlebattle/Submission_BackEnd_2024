@@ -6,11 +6,11 @@ namespace Backend.Repositories
 {
     public class UtilsRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext context;
 
-        public UtilsRepository(ApplicationDbContext context)
+        public UtilsRepository(ApplicationDbContext _context)
         {
-            _context = context;
+            context = _context;
         }
 
         public async Task<int> GetLocationIdByNameAsync(string locationName)
@@ -18,7 +18,7 @@ namespace Backend.Repositories
             if (string.IsNullOrEmpty(locationName))
                 throw new ArgumentException("Location name cannot be null or empty.", nameof(locationName));
 
-            var location = await _context.Set<Locations>()
+            var location = await context.Set<Locations>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(l => l.Name == locationName);
 
@@ -33,7 +33,7 @@ namespace Backend.Repositories
             if (string.IsNullOrEmpty(unitName))
                 throw new ArgumentException("Unit name cannot be null or empty.", nameof(unitName));
 
-            var unit = await _context.Set<Units>()
+            var unit = await context.Set<Units>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.UnitName == unitName);
 
@@ -48,7 +48,7 @@ namespace Backend.Repositories
             if (string.IsNullOrEmpty(email))
                 throw new ArgumentException("Email cannot be null or empty.", nameof(email));
 
-            var user = await _context.ApplicationUsers
+            var user = await context.ApplicationUsers
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email);
 
@@ -56,7 +56,7 @@ namespace Backend.Repositories
         }
         public async Task<List<string>> GetAllUnitsAsAListAsync()
         {
-            return await _context.Set<Units>()
+            return await context.Set<Units>()
                 .AsNoTracking()
                 .Select(unit => unit.UnitName)
                 .ToListAsync();
@@ -64,7 +64,7 @@ namespace Backend.Repositories
 
         public async Task<List<string>> GetAllLocationsAsAListAsync()
         {
-            return await _context.Set<Locations>()
+            return await context.Set<Locations>()
                 .AsNoTracking()
                 .Select(location => location.Name)
                 .ToListAsync();
@@ -75,7 +75,7 @@ namespace Backend.Repositories
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Unit name cannot be null or empty.", nameof(name));
 
-            var unit = await _context.Set<TrainingUnits>()
+            var unit = await context.Set<TrainingUnits>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.UnitName.ToLower() == name.ToLower());
 
@@ -85,8 +85,8 @@ namespace Backend.Repositories
                 {
                     UnitName = name
                 };
-                await _context.TrainingUnits.AddAsync(unit);
-                await _context.SaveChangesAsync();
+                await context.TrainingUnits.AddAsync(unit);
+                await context.SaveChangesAsync();
             }
 
             return unit.Id;
@@ -101,9 +101,9 @@ namespace Backend.Repositories
                 ApplicationUserId = userId
             };
 
-            await _context.Media.AddAsync(newMedia);
+            await context.Media.AddAsync(newMedia);
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return newMedia.MediaId;
         }

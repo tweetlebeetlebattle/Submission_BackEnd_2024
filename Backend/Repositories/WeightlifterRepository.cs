@@ -1,9 +1,7 @@
 ﻿using Backend.Data.Models;
 using Backend.Data;
-using Backend.DTO;
 using Microsoft.EntityFrameworkCore;
 using Backend.DTO.RequestResponseDTOs.Shared;
-using System.Diagnostics.Metrics;
 using Backend.DTO.ModifiedDataDTO.Weightlifter;
 using Backend.DTO.RequestResponseDTOs.Weightlifter;
 
@@ -127,7 +125,6 @@ namespace Backend.Repositories
 
             return unit.Id;
         }
-        // FetchAllUserTrainingAndUniversalReading
         public async Task<AllUniversalLogsAndTraining> FetchAllUserTrainingAndUniversalReading(string userId)
         {
             var result = new AllUniversalLogsAndTraining
@@ -199,9 +196,6 @@ namespace Backend.Repositories
 
             return result;
         }
-
-
-        // FetchPublicUserData
         public async Task<AllUniversalLogsAndTraining> FetchPublicUserData(string username)
         {
             var result = new AllUniversalLogsAndTraining
@@ -280,10 +274,6 @@ namespace Backend.Repositories
 
             return result;
         }
-
-
-
-        // FetchAllTrainingUnits
         public async Task<List<string>> FetchAllTrainingUnits()
         {
             var trainingUnits = await context.TrainingUnits
@@ -302,8 +292,6 @@ namespace Backend.Repositories
 
             return trainingUnits;
         }
-
-        // CreateNewUniversalReading
         public async Task CreateNewUniversalReading(string userId, string name, double measurement, int trainingUnitId, DateTime dateTime)
         {
             var existingReading = await context.UniversalReading
@@ -362,10 +350,6 @@ namespace Backend.Repositories
             await context.TrainingSetsLog.AddRangeAsync(trainingSets);
             await context.SaveChangesAsync();
         }
-
-
-
-        // UpdateUniversalReadingPublicity
         public async Task UpdateUniversalReadingPublicity(string title, bool isPublic)
         {
             var universalReadings = await context.UniversalReading
@@ -384,8 +368,6 @@ namespace Backend.Repositories
 
             await context.SaveChangesAsync();
         }
-
-        // UpdateTrainingLogPublicity
         public async Task UpdateTrainingLogPublicity(string title, bool isPublic)
         {
             if (string.IsNullOrEmpty(title))

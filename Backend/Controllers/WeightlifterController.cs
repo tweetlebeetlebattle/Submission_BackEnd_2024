@@ -26,10 +26,9 @@ namespace Backend.Controllers
             try
             {
                 var userId = await _jwtService.GetUserIdFromJwtAsync(Request.Headers["Authorization"]);
-
                 var result = await _weightlifterService.FetchAllUserTrainingAndUniversalLogs(userId);
 
-                return Ok(new { result });
+                return Ok(new { Message = "Training and universal logs retrieved successfully.", Data = result });
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -40,6 +39,7 @@ namespace Backend.Controllers
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+
         [HttpGet("FetchPublicUserData")]
         public async Task<IActionResult> FetchPublicUserData([FromQuery] string Username)
         {
@@ -47,13 +47,14 @@ namespace Backend.Controllers
             {
                 var result = await _weightlifterService.FetchPublicUserData(Username);
 
-                return Ok(new { result });
+                return Ok(new { Message = "Public user data retrieved successfully.", Data = result });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+
         [HttpGet("FetchAllTrainingUnits")]
         public async Task<IActionResult> FetchAllTrainingUnits()
         {
@@ -61,45 +62,46 @@ namespace Backend.Controllers
             {
                 var result = await _weightlifterService.FetchAllTrainingUnits();
 
-                return Ok(new { result });
+                return Ok(new { Message = "Training units retrieved successfully.", Data = result });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+
         [HttpPost("CreateNewUniversalReading")]
         public async Task<IActionResult> CreateNewUniversalReading([FromBody] CreateUniversalReading createUniversalReading)
         {
             try
             {
                 var userId = await _jwtService.GetUserIdFromJwtAsync(Request.Headers["Authorization"]);
-
                 await _weightlifterService.CreateNewUniversalReading(userId, createUniversalReading);
 
-                return Ok(new { Message = "New Universal Reading created." });
+                return Ok(new { Message = "New Universal Reading created successfully." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+
         [HttpPost("CreateNewTraining")]
         public async Task<IActionResult> CreateNewTraining([FromForm] CreateNewTraining createNewTraining)
         {
             try
             {
                 var userId = await _jwtService.GetUserIdFromJwtAsync(Request.Headers["Authorization"]);
-
                 await _weightlifterService.CreateNewTraining(userId, createNewTraining);
 
-                return Ok(new { Message = "New Training Log created." });
+                return Ok(new { Message = "New Training Log created successfully." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+
         [HttpPost("UpdateUniversalReadingPublicity")]
         public async Task<IActionResult> UpdateUniversalReadingPublicity([FromBody] ChangeUniversalReadingTrainingPublicity changeForm)
         {
@@ -107,13 +109,14 @@ namespace Backend.Controllers
             {
                 await _weightlifterService.UpdateUniversalReadingPublicity(changeForm);
 
-                return Ok(new { Message = "Updated Universal Reading Publicity." });
+                return Ok(new { Message = "Universal Reading publicity updated successfully." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+
         [HttpPost("UpdateTrainingLogPublicity")]
         public async Task<IActionResult> UpdateTrainingLogPublicity([FromBody] ChangeUniversalReadingTrainingPublicity changeForm)
         {
@@ -121,13 +124,14 @@ namespace Backend.Controllers
             {
                 await _weightlifterService.UpdateTrainingLogPublicity(changeForm);
 
-                return Ok(new { Message = "Updated Training Log Publicity." });
+                return Ok(new { Message = "Training Log publicity updated successfully." });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+
         [HttpGet("FetchAllTrainingTitles")]
         public async Task<IActionResult> FetchAllTrainingTitles()
         {
@@ -135,7 +139,7 @@ namespace Backend.Controllers
             {
                 var result = await _weightlifterService.FetchAllTrainingTitles();
 
-                return Ok(new { result });
+                return Ok(new { Message = "Training titles retrieved successfully.", Data = result });
             }
             catch (Exception ex)
             {

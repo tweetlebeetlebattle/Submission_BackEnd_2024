@@ -78,7 +78,6 @@ namespace Backend.Services
             }
             catch (Exception)
             {
-                // Token validation failed
                 return null;
             }
         }

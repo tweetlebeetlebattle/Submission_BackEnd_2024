@@ -16,6 +16,7 @@ namespace Backend.Data.ExtendedModel
             Feedbacks = new List<Feedback>();
             UniversalReadings = new List<UniversalReading>();
             Medias = new List<Media>();
+            TrainingLogs = new List<TrainingLog>();
         }
 
         public virtual List<TrainingBlog> TrainingBlogs { get; set; }
@@ -23,7 +24,7 @@ namespace Backend.Data.ExtendedModel
         public virtual List<TrainingComment> TrainingComments { get; set; }
         public virtual List<SeaComment> SeaComments { get; set; }
         public virtual List<Feedback> Feedbacks { get; set; }
-        public virtual TrainingLog TrainingLogs { get; set; }
+        public virtual List<TrainingLog> TrainingLogs { get; set; }
         public virtual List<UniversalReading> UniversalReadings { get; set; }
         public virtual List<Media> Medias { get; set; }
     }

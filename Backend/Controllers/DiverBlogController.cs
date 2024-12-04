@@ -7,7 +7,6 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] 
     public class DiverBlogController : ControllerBase
     {
         private readonly DiverService _diverService;
@@ -18,7 +17,7 @@ namespace Backend.Controllers
             _diverService = diverService;
             _jwtService = jwtService;
         }
-
+        [Authorize]
         [HttpPost("CreateNewBlog")]
         public async Task<IActionResult> CreateNewBlog([FromForm] CreateNewBlogDto dto)
         {
@@ -39,7 +38,7 @@ namespace Backend.Controllers
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
-
+        [Authorize]
         [HttpPost("CreateNewComment")]
         public async Task<IActionResult> CreateNewComment([FromForm] CreateNewCommentDto dto)
         {
@@ -69,6 +68,20 @@ namespace Backend.Controllers
                 var result = await _diverService.FetchAllApprovedCommentsAsync();
 
                 return Ok(new { Message = "Approved comments fetched successfully.", Data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
+        [HttpGet("FetchNumberOfApprovedBlogs")]
+        public async Task<IActionResult> FetchNumberOfApprovedBlogs()
+        {
+            try
+            {
+                var result = await _diverService.FetchNumberOfBlogs();
+
+                return Ok(new { Message = "Approved blogs counted successfully.", Data = result });
             }
             catch (Exception ex)
             {
