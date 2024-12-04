@@ -57,9 +57,13 @@ namespace Backend.Services
             return "Comment created successfully!";
         }
 
-        public async Task<List<BlogWithComments>> FetchAllApprovedCommentsAsync()
+        public async Task<List<BlogWithComments>> FetchAllApprovedCommentsAsync(int skip, int blogsPerPage)
         {
-            return await _weightlifterRepository.FetchAllApprovedBlogDataAsync();
+            return await _weightlifterRepository.FetchAllApprovedBlogDataAsync(skip, blogsPerPage);
+        }
+        public async Task<int> FetchNumberOfBlogs()
+        {
+            return await _weightlifterRepository.FetchNumberOfBlogs();
         }
         public async Task<AllUniversalLogsAndTraining> FetchAllUserTrainingAndUniversalLogs(string userId)
         {

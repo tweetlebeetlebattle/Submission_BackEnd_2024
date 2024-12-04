@@ -16,7 +16,7 @@ namespace Backend.Repositories
             context = _context;
         }
 
-        public async Task<List<BlogWithComments>> FetchAllApprovedBlogDataAsync()
+        public async Task<List<BlogWithComments>> FetchAllApprovedBlogDataAsync(int skip, int blogsPerPage)
         {
             var blogsWithComments = await context.SeaBlog
                 .Where(blog => blog.ApprovedStatus)
@@ -26,6 +26,9 @@ namespace Backend.Repositories
                     .ThenInclude(comment => comment.ApplicationUser)
                 .Include(blog => blog.SeaComments)
                     .ThenInclude(comment => comment.Media)
+                .OrderByDescending(blog => blog.Time) 
+                .Skip(skip) 
+                .Take(blogsPerPage) 
                 .Select(blog => new BlogWithComments
                 {
                     BlogId = blog.BlogId,
@@ -48,6 +51,7 @@ namespace Backend.Repositories
 
             return blogsWithComments;
         }
+
 
         public async Task CreateNewBlog(string userId, string textUrl, string pictureUrl)
         {

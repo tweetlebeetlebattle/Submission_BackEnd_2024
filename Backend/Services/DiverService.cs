@@ -61,9 +61,9 @@ namespace Backend.Services
             return "Comment created successfully!";
         }
 
-        public async Task<List<BlogWithComments>> FetchAllApprovedCommentsAsync()
+        public async Task<List<BlogWithComments>> FetchAllApprovedCommentsAsync(int skip, int blogsPerPage)
         {
-            return await _diverRepository.FetchAllApprovedBlogDataAsync();
+            return await _diverRepository.FetchAllApprovedBlogDataAsync(skip, blogsPerPage);
         }
         public async Task<int> FetchNumberOfBlogs()
         {

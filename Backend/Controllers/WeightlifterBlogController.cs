@@ -62,13 +62,47 @@ namespace Backend.Controllers
         }
 
         [HttpGet("FetchAllApprovedComments")]
-        public async Task<IActionResult> FetchAllApprovedComments()
+        public async Task<IActionResult> FetchAllApprovedComments([FromQuery] int blogsPerPage, [FromQuery] int pageNumber)
         {
             try
             {
-                var result = await _weightlifterService.FetchAllApprovedCommentsAsync();
+                if (blogsPerPage <= 0 || pageNumber <= 0)
+                {
+                    return BadRequest(new { Message = "blogsPerPage and pageNumber must be greater than 0." });
+                }
 
-                return Ok(new { Message = "Approved comments fetched successfully.", Data = result });
+                int totalBlogs = await _weightlifterService.FetchNumberOfBlogs();
+
+                int totalPages = (int)Math.Ceiling((double)totalBlogs / blogsPerPage);
+
+                if (pageNumber > totalPages)
+                {
+                    pageNumber = totalPages;
+                }
+
+                int skip = (pageNumber - 1) * blogsPerPage;
+
+                var result = await _weightlifterService.FetchAllApprovedCommentsAsync(skip, blogsPerPage);
+
+                return Ok(new
+                {
+                    Message = "Approved comments fetched successfully.",
+                    Data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
+        [HttpGet("FetchNumberOfApprovedWeightlifterBlogs")]
+        public async Task<IActionResult> FetchNumberOfApprovedWeightlifterBlogs()
+        {
+            try
+            {
+                var result = await _weightlifterService.FetchNumberOfBlogs();
+
+                return Ok(new { Message = "Approved blogs counted successfully.", Data = result });
             }
             catch (Exception ex)
             {
