@@ -65,6 +65,10 @@ namespace Backend.Services
         {
             return await _weightlifterRepository.FetchNumberOfBlogs();
         }
+        public async Task<int> FetchNumberOfApprovedUserWeightlifterBlogs(string query)
+        {
+            return await _weightlifterRepository.FetchNumberOfApprovedUserWeightlifterBlogs(query);
+        }
         public async Task<AllUniversalLogsAndTraining> FetchAllUserTrainingAndUniversalLogs(string userId)
         {
             return await _weightlifterRepository.FetchAllUserTrainingAndUniversalReading(userId);
@@ -126,6 +130,10 @@ namespace Backend.Services
         public async Task UpdateTrainingLogPublicity(ChangeUniversalReadingTrainingPublicity changeForm)
         {
             await _weightlifterRepository.UpdateTrainingLogPublicity(changeForm.Name, changeForm.IsPublic);
+        }
+        public async Task<List<BlogWithComments>> FetchApprovedUserWeightlifterBlogs(int skip, int pageNumber, string username)
+        {
+            return await _weightlifterRepository.FetchApprovedUserWeightlifterBlogs(skip, pageNumber, username);
         }
     }
 }

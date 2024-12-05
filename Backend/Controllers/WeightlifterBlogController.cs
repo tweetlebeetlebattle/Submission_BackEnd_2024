@@ -109,5 +109,44 @@ namespace Backend.Controllers
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+        [HttpGet("FetchNumberOfApprovedUserWeightlifterBlogs")]
+        public async Task<IActionResult> FetchNumberOfApprovedUserWeightlifterBlogs([FromQuery] SearchSuggestions query)
+        {
+            try
+            {
+                var result = await _weightlifterService.FetchNumberOfApprovedUserWeightlifterBlogs(query.SearchQuery);
+
+                return Ok(new { Message = "Approved blogs counted successfully.", Data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
+        [HttpGet("FetchApprovedUserWeightlifterBlogs")]
+        public async Task<IActionResult> FetchApprovedUserWeightlifterBlogs([FromQuery] int blogsPerPage, [FromQuery] int pageNumber, [FromQuery] string username)
+        {
+            try
+            {
+                int totalBlogs = await _weightlifterService.FetchNumberOfApprovedUserWeightlifterBlogs(username);
+
+                int totalPages = (int)Math.Ceiling((double)totalBlogs / blogsPerPage);
+
+                if (pageNumber > totalPages)
+                {
+                    pageNumber = totalPages;
+                }
+
+                int skip = (pageNumber - 1) * blogsPerPage;
+
+                var result = await _weightlifterService.FetchApprovedUserWeightlifterBlogs(skip, pageNumber, username);
+
+                return Ok(new { Message = "Approved blogs fetched successfully.", Data = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
     }
 }

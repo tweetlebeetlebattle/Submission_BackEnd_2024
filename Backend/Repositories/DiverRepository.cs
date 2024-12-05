@@ -276,5 +276,48 @@ namespace Backend.Repositories
                 .CountAsync(blog => blog.ApprovedStatus); 
             return result;
         }
+        public async Task<int> FetchNumberOfApprovedUserDiverBlogs(string query)
+        {
+            int result = await context.SeaBlog
+                .Where(sb => sb.ApplicationUser.UserName == query)
+                .CountAsync(blog => blog.ApprovedStatus);
+            return result;
+        }
+        public async Task<List<BlogWithComments>> FetchApprovedUserDiverBlogs(int skip, int blogsPerPage, string username)
+        {
+            var blogsWithComments = await context.SeaBlog
+                .Where(blog => blog.ApprovedStatus)
+                .Where(blog => blog.ApplicationUser.UserName == username)
+                .Include(blog => blog.ApplicationUser)
+                .Include(blog => blog.Media)
+                .Include(blog => blog.SeaComments)
+                    .ThenInclude(comment => comment.ApplicationUser)
+                .Include(blog => blog.SeaComments)
+                    .ThenInclude(comment => comment.Media)
+                .OrderByDescending(blog => blog.Time)
+                .Skip(skip)
+                .Take(blogsPerPage)
+                .Select(blog => new BlogWithComments
+                {
+                    BlogId = blog.BlogId,
+                    ApplicationUserName = blog.ApplicationUser.UserName,
+                    MediaTextUrl = blog.Media.TextUrl,
+                    MediaPictureUrl = blog.Media.PictureUrl,
+                    Time = blog.Time,
+                    Comments = blog.SeaComments
+                        .Where(comment => comment.ApprovedStatus)
+                        .Select(comment => new CommentDto
+                        {
+                            CommentId = comment.CommentId,
+                            ApplicationUserName = comment.ApplicationUser.UserName,
+                            MediaTextUrl = comment.Media.TextUrl,
+                            MediaPictureUrl = comment.Media.PictureUrl,
+                            Time = comment.Time,
+                        }).ToList()
+                })
+                .ToListAsync();
+
+            return blogsWithComments;
+        }
     }
 }

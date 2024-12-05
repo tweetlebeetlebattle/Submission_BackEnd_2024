@@ -12,7 +12,10 @@ namespace Backend.Services
             _utilsRepository = utilsRepository;
             _bucketAWSService = bucketAWSService;
         }
-
+        public async Task<List<string>> FetchSearchSuggestions(string searchQuery)
+        {
+            return await _utilsRepository.FetchSearchSuggestions(searchQuery);
+        }
         public async Task<int> GetLocationIdByNameAsync(string locationName)
         {
             return await _utilsRepository.GetLocationIdByNameAsync(locationName);

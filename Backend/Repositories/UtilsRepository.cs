@@ -107,5 +107,20 @@ namespace Backend.Repositories
 
             return newMedia.MediaId;
         }
+        public async Task<List<string>> FetchSearchSuggestions(string searchQuery)
+        {
+            if (string.IsNullOrWhiteSpace(searchQuery))
+            {
+                return new List<string>();
+            }
+
+            string lowerSearchQuery = searchQuery.ToLower();
+
+            return await context.ApplicationUsers
+                .Where(user => user.UserName.ToLower().Contains(lowerSearchQuery)) 
+                .Select(user => user.UserName)
+                .ToListAsync();
+        }
+
     }
 }
