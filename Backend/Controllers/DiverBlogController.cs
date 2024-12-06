@@ -139,7 +139,7 @@ namespace Backend.Controllers
 
                 int skip = (pageNumber - 1) * blogsPerPage;
 
-                var result = await _diverService.FetchApprovedUserDiverBlogs(skip, pageNumber, username);
+                var result = await _diverService.FetchApprovedUserDiverBlogs(skip, blogsPerPage, username);
 
                 return Ok(new { Message = "Approved blogs fetched successfully.", Data = result });
             }

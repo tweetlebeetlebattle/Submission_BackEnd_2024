@@ -8,7 +8,6 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class WeightlifterController : ControllerBase
     {
         private readonly WeightlifterService _weightlifterService;
@@ -19,7 +18,7 @@ namespace Backend.Controllers
             _weightlifterService = diverService;
             _jwtService = jwtService;
         }
-
+        [Authorize]
         [HttpGet("FetchAllUserTrainingAndUniversalLogs")]
         public async Task<IActionResult> FetchAllUserTrainingAndUniversalLogs()
         {
@@ -71,6 +70,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("CreateNewUniversalReading")]
+        [Authorize]
         public async Task<IActionResult> CreateNewUniversalReading([FromBody] CreateUniversalReading createUniversalReading)
         {
             try
@@ -87,6 +87,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("CreateNewTraining")]
+        [Authorize]
         public async Task<IActionResult> CreateNewTraining([FromForm] CreateNewTraining createNewTraining)
         {
             try
@@ -103,6 +104,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("UpdateUniversalReadingPublicity")]
+        [Authorize]
         public async Task<IActionResult> UpdateUniversalReadingPublicity([FromBody] ChangeUniversalReadingTrainingPublicity changeForm)
         {
             try
@@ -118,6 +120,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("UpdateTrainingLogPublicity")]
+        [Authorize]
         public async Task<IActionResult> UpdateTrainingLogPublicity([FromBody] ChangeUniversalReadingTrainingPublicity changeForm)
         {
             try

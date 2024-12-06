@@ -410,8 +410,11 @@ namespace Backend.Repositories
         public async Task<List<BlogWithComments>> FetchApprovedUserWeightlifterBlogs(int skip, int blogsPerPage, string username)
         {
             var blogsWithComments = await context.TrainingBlog
-                .Where(blog => blog.ApprovedStatus)
-                .Where(blog => blog.ApplicationUser.UserName == username)
+                .Where(blog =>
+                    blog.ApprovedStatus &&
+                    (blog.ApplicationUser.UserName == username ||
+                     blog.TrainingComments.Any(comment => comment.ApplicationUser.UserName == username))
+                )
                 .Include(blog => blog.ApplicationUser)
                 .Include(blog => blog.Media)
                 .Include(blog => blog.TrainingComments)

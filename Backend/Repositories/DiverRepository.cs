@@ -286,8 +286,11 @@ namespace Backend.Repositories
         public async Task<List<BlogWithComments>> FetchApprovedUserDiverBlogs(int skip, int blogsPerPage, string username)
         {
             var blogsWithComments = await context.SeaBlog
-                .Where(blog => blog.ApprovedStatus)
-                .Where(blog => blog.ApplicationUser.UserName == username)
+                .Where(blog =>
+                    blog.ApprovedStatus &&
+                    (blog.ApplicationUser.UserName == username || 
+                     blog.SeaComments.Any(comment => comment.ApplicationUser.UserName == username)) 
+                )
                 .Include(blog => blog.ApplicationUser)
                 .Include(blog => blog.Media)
                 .Include(blog => blog.SeaComments)
