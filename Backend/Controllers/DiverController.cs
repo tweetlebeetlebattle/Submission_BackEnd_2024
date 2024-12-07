@@ -7,7 +7,6 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] 
     public class DiverController : ControllerBase
     {
         private readonly DiverService _diverService;
@@ -18,7 +17,7 @@ namespace Backend.Controllers
             _diverService = diverService;
             _jwtService = jwtService;
         }
-
+        [Authorize]
         [HttpPost("PostUserFeedback")]
         public async Task<IActionResult> PostUserFeedback([FromForm] FeedbackDTO feedbackDto)
         {
@@ -28,6 +27,60 @@ namespace Backend.Controllers
                 await _diverService.PostUserFeedback(userId, feedbackDto);
 
                 return Ok(new { Message = "User feedback submitted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
+
+        [HttpGet("FetchHistoricSeaDataByLocationHTML")]
+        public async Task<IActionResult> FetchHistoricSeaDataByLocationHTML([FromQuery] string location)
+        {
+            try
+            {
+                var result = await _diverService.FetchHistoricSeaDataByLocationHTML(location);
+                return Ok(new { Message = "Historic HTML sea data fetched successfully.", Data = result });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
+
+        [HttpGet("FetchHistoricSeaDataByLocationGif")]
+        public async Task<IActionResult> FetchHistoricSeaDataByLocationGif([FromQuery] string location)
+        {
+            try
+            {
+                var result = await _diverService.FetchHistoricSeaDataByLocationGif(location);
+                return Ok(new { Message = "Historic GIF sea data fetched successfully.", Data = result });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
+
+        [HttpGet("FetchHistoricSeaDataByLocationStorm")]
+        public async Task<IActionResult> FetchHistoricSeaDataByLocationStorm([FromQuery] string location)
+        {
+            try
+            {
+                var result = await _diverService.FetchHistoricSeaDataByLocationStorm(location);
+                return Ok(new { Message = "Historic storm sea data fetched successfully.", Data = result });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
             }
             catch (Exception ex)
             {

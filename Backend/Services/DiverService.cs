@@ -145,5 +145,19 @@ namespace Backend.Services
                 textUrl
             );
         }
+        public async Task<HistoricSeaDataByLocation> FetchHistoricSeaDataByLocationHTML(string location)
+        {
+            return await _diverRepository.FetchHistoricSeaDataByLocationHTML(location);
+        }
+
+        public async Task<HistoricSeaDataByLocation> FetchHistoricSeaDataByLocationGif(string location)
+        {
+            return await _diverRepository.FetchHistoricSeaDataByLocationGif(location);
+        }
+
+        public async Task<HistoricSeaDataByLocation> FetchHistoricSeaDataByLocationStorm(string location)
+        {
+            return await _diverRepository.FetchHistoricSeaDataByLocationStorm(location);
+        }
     }
 }

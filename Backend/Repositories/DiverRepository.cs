@@ -322,5 +322,117 @@ namespace Backend.Repositories
 
             return blogsWithComments;
         }
+        public async Task<HistoricSeaDataByLocation> FetchHistoricSeaDataByLocationHTML(string location)
+        {
+            if (string.IsNullOrWhiteSpace(location))
+                throw new ArgumentException("Location cannot be null or empty.", nameof(location));
+
+            var locationEntity = await context.Locations
+                .FirstOrDefaultAsync(loc => loc.Name == location);
+
+            if (locationEntity == null)
+                throw new KeyNotFoundException($"No location found with the name '{location}'.");
+
+            var readings = await context.DailyHTMLReading
+                .Where(reading => reading.LocationId == locationEntity.Id)
+                .OrderBy(reading => reading.Date)
+                .Select(reading => new HistoricSeaDataByLocationReadings
+                {
+                    WaveMin = reading.DailyWaveMin,
+                    WaveMax = reading.DailyWaveMax,
+                    WaveAvg = reading.DailyWaveAvg,
+                    WaveUnitId = reading.WaveUnitId,
+
+                    TempMin = reading.DailyTempMin,
+                    TempMax = reading.DailyTempMax,
+                    TempAvg = reading.DailyTempAvg,
+                    TempUnitId = reading.TempUnitId,
+
+                    DateTime = reading.Date
+                })
+                .ToListAsync();
+
+            return new HistoricSeaDataByLocation
+            {
+                Location = locationEntity.Name,
+                Readings = readings
+            };
+        }
+
+
+        public async Task<HistoricSeaDataByLocation> FetchHistoricSeaDataByLocationGif(string location)
+        {
+            if (string.IsNullOrWhiteSpace(location))
+                throw new ArgumentException("Location cannot be null or empty.", nameof(location));
+
+            var locationEntity = await context.Locations
+                .FirstOrDefaultAsync(loc => loc.Name == location);
+
+            if (locationEntity == null)
+                throw new KeyNotFoundException($"No location found with the name '{location}'.");
+
+            var readings = await context.DailyGifReading
+                .Where(reading => reading.LocationId == locationEntity.Id)
+                .OrderBy(reading => reading.Date)
+                .Select(reading => new HistoricSeaDataByLocationReadings
+                {
+                    WaveMin = reading.DailyWaveMin,
+                    WaveMax = reading.DailyWaveMax,
+                    WaveAvg = reading.DailyWaveAvg,
+                    WaveUnitId = reading.WaveUnitId,
+
+                    DateTime = reading.Date
+                })
+                .ToListAsync();
+
+            return new HistoricSeaDataByLocation
+            {
+                Location = locationEntity.Name,
+                Readings = readings
+            };
+        }
+
+        public async Task<HistoricSeaDataByLocation> FetchHistoricSeaDataByLocationStorm(string location)
+        {
+            if (string.IsNullOrWhiteSpace(location))
+                throw new ArgumentException("Location cannot be null or empty.", nameof(location));
+
+            var locationEntity = await context.Locations
+                .FirstOrDefaultAsync(loc => loc.Name == location);
+
+            if (locationEntity == null)
+                throw new KeyNotFoundException($"No location found with the name '{location}'.");
+
+            var readings = await context.DailyGlassStormReading
+                .Where(reading => reading.LocationId == locationEntity.Id)
+                .OrderBy(reading => reading.Date)
+                .Select(reading => new HistoricSeaDataByLocationReadings
+                {
+                    WaveMin = reading.DailyWaveMin,
+                    WaveMax = reading.DailyWaveMax,
+                    WaveAvg = reading.DailyWaveAvg,
+                    WaveUnitId = reading.WaveUnitId,
+
+                    TempMin = reading.DailyTempMin,
+                    TempMax = reading.DailyTempMax,
+                    TempAvg = reading.DailyTempAvg,
+                    TempUnitId = reading.TempUnitId,
+
+                    WindMin = reading.DailyWindMin,
+                    WindMax = reading.DailyWindMax,
+                    WindAvg = reading.DailyWindAvg,
+                    WindUnitId = reading.WindUnitId,
+
+                    DateTime = reading.Date
+                })
+                .ToListAsync();
+
+            return new HistoricSeaDataByLocation
+            {
+                Location = locationEntity.Name,
+                Readings = readings
+            };
+        }
+
     }
 }

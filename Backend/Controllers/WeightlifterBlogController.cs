@@ -7,7 +7,6 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] 
     public class WeightlifterBlogController : ControllerBase
     {
         private readonly WeightlifterService _weightlifterService;
@@ -18,7 +17,7 @@ namespace Backend.Controllers
             _weightlifterService = weightlifterService;
             _jwtService = jwtService;
         }
-
+        [Authorize]
         [HttpPost("CreateNewBlog")]
         public async Task<IActionResult> CreateNewBlog([FromForm] CreateNewBlogDto dto)
         {
@@ -39,7 +38,7 @@ namespace Backend.Controllers
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
-
+        [Authorize]
         [HttpPost("CreateNewComment")]
         public async Task<IActionResult> CreateNewComment([FromForm] CreateNewCommentDto dto)
         {
