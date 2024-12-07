@@ -200,31 +200,6 @@ namespace Backend.Repositories
 
             return broadSeaData;
         }
-
-        public async Task<HistoricSeaDataByLocation> FetchSeaDataHistorcForSpecifiedLocation(string locationName)
-        {
-            var location = await context.Locations
-                .FirstOrDefaultAsync(loc => loc.Name == locationName);
-
-            var readings = await context.DailyGlassStormReading
-                .Where(reading => reading.LocationId == location.Id)
-                .OrderBy(reading => reading.Date)
-                .ToListAsync();
-
-            var historicData = new HistoricSeaDataByLocation
-            {
-                Location = location.Name,
-                Readings = readings.Select(r => new HistoricSeaDataByLocationReadings
-                {
-                    WaveMin = r.DailyWaveMin ?? 0,
-                    WaveMax = r.DailyWaveMax ?? 0,
-                    WaveAvg = r.DailyWaveAvg ?? 0,
-                    DateTime = r.Date
-                }).ToList()
-            };
-
-            return historicData;
-        }
         public async Task PostUserFeedback(
             string userId,
             int locationId,
@@ -338,16 +313,20 @@ namespace Backend.Repositories
                 .OrderBy(reading => reading.Date)
                 .Select(reading => new HistoricSeaDataByLocationReadings
                 {
-                    WaveMin = reading.DailyWaveMin,
-                    WaveMax = reading.DailyWaveMax,
-                    WaveAvg = reading.DailyWaveAvg,
-                    WaveUnitId = reading.WaveUnitId,
-
-                    TempMin = reading.DailyTempMin,
-                    TempMax = reading.DailyTempMax,
-                    TempAvg = reading.DailyTempAvg,
-                    TempUnitId = reading.TempUnitId,
-
+                    WaveData = reading.WaveUnit != null ? new WaveData
+                    {
+                        WaveMin = reading.DailyWaveMin,
+                        WaveMax = reading.DailyWaveMax,
+                        WaveAvg = reading.DailyWaveAvg,
+                        WaveUnit = reading.WaveUnit.UnitName
+                    } : null,
+                    TempData = reading.TempUnit != null ? new TempData
+                    {
+                        TempMin = reading.DailyTempMin,
+                        TempMax = reading.DailyTempMax,
+                        TempAvg = reading.DailyTempAvg,
+                        TempUnit = reading.TempUnit.UnitName
+                    } : null,
                     DateTime = reading.Date
                 })
                 .ToListAsync();
@@ -358,7 +337,6 @@ namespace Backend.Repositories
                 Readings = readings
             };
         }
-
 
         public async Task<HistoricSeaDataByLocation> FetchHistoricSeaDataByLocationGif(string location)
         {
@@ -376,11 +354,13 @@ namespace Backend.Repositories
                 .OrderBy(reading => reading.Date)
                 .Select(reading => new HistoricSeaDataByLocationReadings
                 {
-                    WaveMin = reading.DailyWaveMin,
-                    WaveMax = reading.DailyWaveMax,
-                    WaveAvg = reading.DailyWaveAvg,
-                    WaveUnitId = reading.WaveUnitId,
-
+                    WaveData = reading.WaveUnit != null ? new WaveData
+                    {
+                        WaveMin = reading.DailyWaveMin,
+                        WaveMax = reading.DailyWaveMax,
+                        WaveAvg = reading.DailyWaveAvg,
+                        WaveUnit = reading.WaveUnit.UnitName
+                    } : null,
                     DateTime = reading.Date
                 })
                 .ToListAsync();
@@ -408,21 +388,27 @@ namespace Backend.Repositories
                 .OrderBy(reading => reading.Date)
                 .Select(reading => new HistoricSeaDataByLocationReadings
                 {
-                    WaveMin = reading.DailyWaveMin,
-                    WaveMax = reading.DailyWaveMax,
-                    WaveAvg = reading.DailyWaveAvg,
-                    WaveUnitId = reading.WaveUnitId,
-
-                    TempMin = reading.DailyTempMin,
-                    TempMax = reading.DailyTempMax,
-                    TempAvg = reading.DailyTempAvg,
-                    TempUnitId = reading.TempUnitId,
-
-                    WindMin = reading.DailyWindMin,
-                    WindMax = reading.DailyWindMax,
-                    WindAvg = reading.DailyWindAvg,
-                    WindUnitId = reading.WindUnitId,
-
+                    WaveData = reading.WaveUnit != null ? new WaveData
+                    {
+                        WaveMin = reading.DailyWaveMin,
+                        WaveMax = reading.DailyWaveMax,
+                        WaveAvg = reading.DailyWaveAvg,
+                        WaveUnit = reading.WaveUnit.UnitName
+                    } : null,
+                    TempData = reading.TempUnit != null ? new TempData
+                    {
+                        TempMin = reading.DailyTempMin,
+                        TempMax = reading.DailyTempMax,
+                        TempAvg = reading.DailyTempAvg,
+                        TempUnit = reading.TempUnit.UnitName
+                    } : null,
+                    WindData = reading.WindUnit != null ? new WindData
+                    {
+                        WindMin = reading.DailyWindMin,
+                        WindMax = reading.DailyWindMax,
+                        WindAvg = reading.DailyWindAvg,
+                        WindUnit = reading.WindUnit.UnitName
+                    } : null,
                     DateTime = reading.Date
                 })
                 .ToListAsync();
