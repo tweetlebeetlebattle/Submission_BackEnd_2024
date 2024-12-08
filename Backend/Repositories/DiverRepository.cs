@@ -419,6 +419,47 @@ namespace Backend.Repositories
                 Readings = readings
             };
         }
+        public async Task<HistoricSeaDataByLocationDate> FetchIndexSeaDataByPeriod(int period)
+        {
+            var fromDate = DateTime.UtcNow.AddDays(-period);
 
+            var data = await context.DailyGlassStormReading
+                .Where(reading => reading.Date >= fromDate)
+                .GroupBy(reading => reading.LocationId)
+                .Select(group => new HistoricSeaDataByLocation
+                {
+                    Location = group.First().Location.Name,
+                    Readings = group.Select(reading => new HistoricSeaDataByLocationReadings
+                    {
+                        WaveData = new WaveData
+                        {
+                            WaveMin = reading.DailyWaveMin,
+                            WaveMax = reading.DailyWaveMax,
+                            WaveAvg = reading.DailyWaveAvg,
+                            WaveUnit = reading.WaveUnit != null ? reading.WaveUnit.UnitName : null
+                        },
+                        TempData = new TempData
+                        {
+                            TempMin = reading.DailyTempMin,
+                            TempMax = reading.DailyTempMax,
+                            TempAvg = reading.DailyTempAvg,
+                            TempUnit = reading.TempUnit != null ? reading.TempUnit.UnitName : null
+                        },
+                        WindData = new WindData
+                        {
+                            WindMin = reading.DailyWindMin,
+                            WindMax = reading.DailyWindMax,
+                            WindAvg = reading.DailyWindAvg,
+                            WindUnit = reading.WindUnit != null ? reading.WindUnit.UnitName : null
+                        },
+                        DateTime = reading.Date
+                    }).ToList()
+                }).ToListAsync();
+
+            return new HistoricSeaDataByLocationDate
+            {
+                HistoricSeaDataByLocations = data
+            };
+        }
     }
 }

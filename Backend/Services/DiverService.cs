@@ -3,6 +3,7 @@ using Backend.DTO.RequestResponseDTOs.Diver;
 using Backend.DTO.RequestResponseDTOs.Shared;
 using Backend.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using System;
 using System.Collections.Generic;
@@ -158,6 +159,67 @@ namespace Backend.Services
         public async Task<HistoricSeaDataByLocation> FetchHistoricSeaDataByLocationStorm(string location)
         {
             return await _diverRepository.FetchHistoricSeaDataByLocationStorm(location);
+        }
+        public async Task<SeaDataIndex> FetchIndexSeaData(int period)
+        {
+            var dataForPeriod = await _diverRepository.FetchIndexSeaDataByPeriod(period);
+
+            var dataIndices = new List<DataIndex>();
+
+            foreach (var locationData in dataForPeriod.HistoricSeaDataByLocations)
+            {
+                var index = await ReturnDiveIndexOnData(locationData.Readings);
+                dataIndices.Add(new DataIndex
+                {
+                    Location = locationData.Location,
+                    Index = index
+                });
+            }
+
+            return new SeaDataIndex
+            {
+                DataIndices = dataIndices
+            };
+        }
+
+        public async Task<double> ReturnDiveIndexOnData(List<HistoricSeaDataByLocationReadings> data)
+        {
+            double index = 0;
+
+            var averageWaveHeight = data
+                .Where(r => r.WaveData != null && r.WaveData.WaveAvg.HasValue)
+                .Average(r => r.WaveData.WaveAvg.Value);
+
+            if (averageWaveHeight < 0.2)
+            {
+                index = 0;
+            }
+            else if (averageWaveHeight < 0.4)
+            {
+                index = 1;
+            }
+            else if (averageWaveHeight < 0.6)
+            {
+                index = 2;
+            }
+            else
+            {
+                index = 3;
+            }
+
+            if (index < 3)
+            {
+                var maxWaveHeight = data
+                    .Where(r => r.WaveData != null && r.WaveData.WaveMax.HasValue)
+                    .Max(r => r.WaveData.WaveMax.Value);
+
+                if (maxWaveHeight > (index + 1) * 0.2)
+                {
+                    index += 0.5;
+                }
+            }
+
+            return index;
         }
     }
 }

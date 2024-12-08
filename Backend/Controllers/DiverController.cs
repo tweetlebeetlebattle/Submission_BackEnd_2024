@@ -87,5 +87,22 @@ namespace Backend.Controllers
                 return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
             }
         }
+        [HttpGet("FetchIndexSeaDataByPeriod")]
+        public async Task<IActionResult> FetchIndexSeaDataByPeriod([FromQuery] int period)
+        {
+            try
+            {
+                var result = await _diverService.FetchIndexSeaData(period);
+                return Ok(new { Message = "Sea Index fetched successfully.", Data = result });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred.", Details = ex.Message });
+            }
+        }
     }
 }
