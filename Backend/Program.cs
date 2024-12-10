@@ -9,10 +9,21 @@ using Backend.Repositories;
 using Amazon.Runtime;
 using Amazon;
 using Backend.Services;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddUserSecrets<Program>();
+// Add environment variables to the configuration
+builder.Configuration.AddEnvironmentVariables();
+
+// Print the configuration
+Console.WriteLine("==== Configuration Values ====");
+foreach (var kvp in builder.Configuration.AsEnumerable())
+{
+    Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+}
+Console.WriteLine("==== End of Configuration ====");
+
 
 var awsOptions = new AmazonS3Config
 {
@@ -70,7 +81,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("MyAllowSpecificOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000",
+            "https://submission-front-end-2024.vercel.app")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
