@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repositories
 {
-    public class UtilsRepository
+    public class UtilsRepository : IUtilsRepository
     {
         private readonly ApplicationDbContext context;
 

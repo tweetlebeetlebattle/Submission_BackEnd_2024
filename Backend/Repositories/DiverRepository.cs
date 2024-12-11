@@ -7,7 +7,7 @@ using System;
 
 namespace Backend.Repositories
 {
-    public class DiverRepository
+    public class DiverRepository : IDiverRepository
     {
         private readonly ApplicationDbContext context;
 

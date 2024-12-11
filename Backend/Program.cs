@@ -28,8 +28,9 @@ builder.Services.AddSingleton<IAmazonS3>(provider =>
     return new AmazonS3Client(credentials, awsOptions);
 });
 
-builder.Services.AddScoped<S3UtilityService>();
-builder.Services.AddScoped<S3BucketAWSService>();
+builder.Services.AddScoped<IS3UtilityService, S3UtilityService>();
+builder.Services.AddScoped<IS3BucketAWSService, S3BucketAWSService>();
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -40,7 +41,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6; // Minimum password length
+    options.Password.RequiredLength = 6;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
@@ -76,19 +77,17 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddScoped<AdminRepository>();
-builder.Services.AddScoped<DiverRepository>();
-builder.Services.AddScoped<WeightlifterRepository>();
-builder.Services.AddScoped<UtilsRepository>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<IDiverRepository, DiverRepository>();
+builder.Services.AddScoped<IWeightlifterRepository, WeightlifterRepository>();
+builder.Services.AddScoped<IUtilsRepository, UtilsRepository>();
 
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IDiverService, DiverService>();
+builder.Services.AddScoped<IWeightlifterService, WeightlifterService>();
+builder.Services.AddScoped<IUtilityService, UtilityService>();
 
-builder.Services.AddScoped<AdminService>();
-builder.Services.AddScoped<DiverService>();
-builder.Services.AddScoped<WeightlifterService>();
-builder.Services.AddScoped<UtilityService>();
-
-builder.Services.AddScoped<UtilityService>();
-builder.Services.AddScoped<JWTService>();
+builder.Services.AddScoped<IJWTService, JWTService>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();

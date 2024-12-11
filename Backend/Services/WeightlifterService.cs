@@ -6,13 +6,13 @@ using Backend.Repositories;
 
 namespace Backend.Services
 {
-    public class WeightlifterService
+    public class WeightlifterService : IWeightlifterService
     {
-        private readonly WeightlifterRepository _weightlifterRepository;
-        private readonly S3BucketAWSService _s3BucketAWSService;
-        private readonly UtilityService _utilityService;
+        private readonly IWeightlifterRepository _weightlifterRepository;
+        private readonly IS3BucketAWSService _s3BucketAWSService;
+        private readonly IUtilityService _utilityService;
 
-        public WeightlifterService(WeightlifterRepository weightlifterRepository, S3BucketAWSService s3BucketAWSService, UtilityService utilityService)
+        public WeightlifterService(IWeightlifterRepository weightlifterRepository, IS3BucketAWSService s3BucketAWSService, IUtilityService utilityService)
         {
             _weightlifterRepository = weightlifterRepository;
             _s3BucketAWSService = s3BucketAWSService;
@@ -93,14 +93,16 @@ namespace Backend.Services
         }
         public async Task CreateNewTraining(string userId, CreateNewTraining createNewTraining)
         {
+            // Call the method once and reuse the result
             int trainingUnitId = await _utilityService.FetchTrainingUnitIdByName(createNewTraining.UnitName);
             DateTime dateTime = _utilityService.ConvertStringToDateTime(createNewTraining.Date);
+
             CreateNewTrainingModified createNewTrainingModified = new CreateNewTrainingModified
             {
                 Name = createNewTraining.Name,
                 Date = dateTime,
                 TargetWeight = createNewTraining.TargetWeight,
-                UnitId = await _utilityService.FetchTrainingUnitIdByName(createNewTraining.UnitName),
+                UnitId = trainingUnitId, // Reuse the variable
                 TargetSets = createNewTraining.TargetSets,
                 TargetReps = createNewTraining.TargetReps,
                 Sets = new List<SetModified>()
@@ -114,6 +116,7 @@ namespace Backend.Services
                 {
                     mediaId = await _utilityService.CreateNewMediaReturnId(userId, set.Image, set.Text);
                 }
+
                 createNewTrainingModified.Sets.Add(new SetModified
                 {
                     Reps = set.Reps,
@@ -123,6 +126,7 @@ namespace Backend.Services
 
             await _weightlifterRepository.CreateNewTraining(userId, createNewTrainingModified);
         }
+
         public async Task UpdateUniversalReadingPublicity(ChangeUniversalReadingTrainingPublicity changeForm)
         {
             await _weightlifterRepository.UpdateUniversalReadingPublicity(changeForm.Name, changeForm.IsPublic);

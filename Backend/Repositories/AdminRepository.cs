@@ -6,7 +6,7 @@ using Backend.DTO.RequestResponseDTOs.Admin;
 
 namespace Backend.Repositories
 {
-    public class AdminRepository
+    public class AdminRepository : IAdminRepository
     {
         private readonly ApplicationDbContext context;
 

@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Backend.Services
 {
-    public class DiverService
+    public class DiverService : IDiverService
     {
-        private readonly DiverRepository _diverRepository;
-        private readonly S3BucketAWSService _s3BucketAWSService;
-        private readonly UtilityService _utilityService;
-        public DiverService(DiverRepository diverRepository, S3BucketAWSService s3BucketAWSService, UtilityService utilityService)
+        private readonly IDiverRepository _diverRepository;
+        private readonly IS3BucketAWSService _s3BucketAWSService;
+        private readonly IUtilityService _utilityService;
+        public DiverService(IDiverRepository diverRepository, IS3BucketAWSService s3BucketAWSService, IUtilityService utilityService)
         {
             _diverRepository = diverRepository;
             _s3BucketAWSService = s3BucketAWSService;

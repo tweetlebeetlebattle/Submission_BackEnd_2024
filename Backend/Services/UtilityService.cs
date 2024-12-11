@@ -3,11 +3,11 @@ using Backend.Repositories;
 
 namespace Backend.Services
 {
-    public class UtilityService
+    public class UtilityService : IUtilityService
     {
-        private readonly UtilsRepository _utilsRepository;
-        private readonly S3BucketAWSService _bucketAWSService;
-        public UtilityService(UtilsRepository utilsRepository, S3BucketAWSService bucketAWSService)
+        private readonly IUtilsRepository _utilsRepository;
+        private readonly IS3BucketAWSService _bucketAWSService;
+        public UtilityService(IUtilsRepository utilsRepository, IS3BucketAWSService bucketAWSService)
         {
             _utilsRepository = utilsRepository;
             _bucketAWSService = bucketAWSService;

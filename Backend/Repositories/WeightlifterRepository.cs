@@ -7,7 +7,7 @@ using Backend.DTO.RequestResponseDTOs.Weightlifter;
 
 namespace Backend.Repositories
 {
-    public class WeightlifterRepository
+    public class WeightlifterRepository : IWeightlifterRepository
     {
         private readonly ApplicationDbContext context;
 

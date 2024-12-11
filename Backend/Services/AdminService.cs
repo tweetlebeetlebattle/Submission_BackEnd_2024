@@ -4,11 +4,11 @@ using Backend.Repositories;
 
 namespace Backend.Services
 {
-    public class AdminService
+    public class AdminService : IAdminService
     {
-        private readonly AdminRepository _adminRepository;
+        private readonly IAdminRepository _adminRepository;
 
-        public AdminService(AdminRepository adminRepository)
+        public AdminService(IAdminRepository adminRepository)
         {
             _adminRepository = adminRepository;
         }

@@ -4,12 +4,12 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-public class S3BucketAWSService
+public class S3BucketAWSService : IS3BucketAWSService
 {
     private readonly IAmazonS3 _s3Client;
-    private readonly S3UtilityService _s3UtilityService;
+    private readonly IS3UtilityService _s3UtilityService;
 
-    public S3BucketAWSService(IAmazonS3 s3Client, S3UtilityService s3UtilityService)
+    public S3BucketAWSService(IAmazonS3 s3Client, IS3UtilityService s3UtilityService)
     {
         _s3Client = s3Client;
         _s3UtilityService = s3UtilityService;
@@ -49,7 +49,7 @@ public class S3BucketAWSService
     }
 }
 
-public class S3UtilityService
+public class S3UtilityService : IS3UtilityService
 {
     private readonly string _bucketName = "bucketheadboris";
     private readonly string _region = "eu-north-1"; 

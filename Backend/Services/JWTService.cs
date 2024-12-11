@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Backend.Services
 {
-    public class JWTService
+    public class JWTService : IJWTService
     {
         private readonly IConfiguration _configuration;
-        private readonly UtilityService _utilityService;
+        private readonly IUtilityService _utilityService;
 
-        public JWTService(IConfiguration configuration, UtilityService utilityService)
+        public JWTService(IConfiguration configuration, IUtilityService utilityService)
         {
             _configuration = configuration;
             _utilityService = utilityService;
