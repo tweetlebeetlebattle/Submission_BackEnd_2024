@@ -13,10 +13,8 @@ using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add environment variables to the configuration
 builder.Configuration.AddEnvironmentVariables();
 
-// Print the configuration
 Console.WriteLine("==== Configuration Values ====");
 foreach (var kvp in builder.Configuration.AsEnumerable())
 {
@@ -51,7 +49,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6; // Minimum password length
+    options.Password.RequiredLength = 6;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
